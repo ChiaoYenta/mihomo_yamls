@@ -2,76 +2,143 @@ name: Backup & Cleanup
 
 on:
   workflow_dispatch: # 允许手动触发
-  workflow_run:      # 监听第二个工作流 (生成文档) 完成后触发
+  workflow_run:      # 监听 "Generate Sub-READMEs" 完成后触发
     workflows: ["Generate Sub-READMEs"]
     types:
       - completed
 
 permissions:
-  contents: write # 允许创建 Release
+  contents: write # 允许发布 Release
   actions: write  # 允许删除 Workflow Runs
 
 jobs:
   backup-and-release:
     runs-on: ubuntu-latest
-    # 仅在“生成文档”成功后，或者手动触发时运行
+    # 仅在生成文档成功后，或手动触发时运行
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     steps:
       - name: 检查代码仓库
         uses: actions/checkout@v4
 
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
       - name: 获取时间戳
         run: echo "TIMESTAMP=$(date +'%Y-%m-%d_%H-%M')" >> $GITHUB_ENV
 
-      - name: 生成明细并打包
+      - name: 生成详细清单并打包
         run: |
-          sudo apt-get install -y zip
+          # --- 1. 使用 Python 生成类似于 README 的详细清单 ---
+          python3 -c '
+          import os
 
-          # --- 1. 生成 Release 描述文档 (包含文件明细) ---
-          echo "## 📦 备份文件明细 (File Manifest)" > release_body.md
-          echo "> 备份时间 (Time): ${{ env.TIMESTAMP }}" >> release_body.md
-          echo "" >> release_body.md
-          echo "### 📄 包含文件列表：" >> release_body.md
-          echo '```text' >> release_body.md
+          timestamp = "${{ env.TIMESTAMP }}"
           
-          # 查找当前目录下所有文件
-          # 排除 .git, .github 目录
-          # 排除 release_body.md 和 .zip 文件自身
-          # sed 's|^./||' 用于去掉路径开头的 ./
-          find . -type f \
-            -not -path '*/.git/*' \
-            -not -path '*/.github/*' \
-            -not -name "release_body.md" \
-            -not -name "*.zip" \
-            | sort | sed 's|^./||' >> release_body.md
-            
-          echo '```' >> release_body.md
+          # 定义分类映射 (与首页保持一致)
+          CATEGORY_MAP = {
+              "Official_Examples": "Mihomo 官方示例 (Official)",
+              "General_Config": "通用进阶配置 (General Config)",
+              "Smart_Mode": "Smart 模式 / 路由专用 (Smart Mode)",
+              "Mobile_Modules": "Android 手机模块 (Mobile Modules)"
+          }
+
+          lines = []
+          lines.append(f"## 📦 自动备份 (Auto Backup)")
+          lines.append(f"> 🕒 **时间 (Time):** {timestamp}")
+          lines.append(f"> 💾 **说明:** 本次 Release 包含以下分类的所有最新配置。\n")
+
+          def get_size_str(path):
+              try:
+                  size = os.path.getsize(path)
+                  if size < 1024: return f"{size} B"
+                  return f"{size/1024:.1f} KB"
+              except: return "N/A"
+
+          # 遍历预定义的分类文件夹
+          for folder, title in CATEGORY_MAP.items():
+              if not os.path.exists(folder): continue
+              
+              lines.append(f"### 📂 {title}")
+              lines.append("| 文件路径 (Path) | 大小 (Size) |")
+              lines.append("| :--- | :--- |")
+              
+              has_files = False
+              # 遍历该分类下的所有文件
+              for root, dirs, files in os.walk(folder):
+                  for file in sorted(files):
+                      # 排除生成的 README 和系统文件
+                      if file == "README.md" or file.startswith("."): continue
+                      
+                      full_path = os.path.join(root, file)
+                      # 显示相对路径 (例如: HenryChiao/MihomoAIO.yaml)
+                      rel_path = os.path.relpath(full_path, folder)
+                      size = get_size_str(full_path)
+                      
+                      lines.append(f"| `{rel_path}` | {size} |")
+                      has_files = True
+              
+              if not has_files:
+                  lines.pop() # 删除表头
+                  lines.pop()
+                  lines.append("_暂无文件_")
+              
+              lines.append("") # 空行分隔
+
+          # 写入 release_body.md
+          with open("release_body.md", "w", encoding="utf-8") as f:
+              f.write("\n".join(lines))
+          '
 
           # --- 2. 打包文件 ---
-          # -x 排除工作流文件、git文件、根目录README和临时描述文件
-          zip -r "Config_Backup_${{ env.TIMESTAMP }}.zip" . -x ".git/*" ".github/*" "README.md" "release_body.md"
+          sudo apt-get install -y zip
+          # -r 递归
+          # -x 排除: git目录, github目录, 所有README.md, 以及生成的 release_body.md
+          zip -r "Config_Backup_${{ env.TIMESTAMP }}.zip" . -x ".git/*" ".github/*" "*/README.md" "README.md" "release_body.md"
 
-          echo "✅ 打包完成，明细已生成。"
+          echo "✅ 清单生成完毕，打包完成。"
 
       - name: 发布 Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: "backup-${{ env.TIMESTAMP }}"
           name: "📅 自动备份: ${{ env.TIMESTAMP }}"
-          body_path: release_body.md  # 使用刚才生成的明细文件作为 Release 内容
+          body_path: release_body.md
           files: Config_Backup_${{ env.TIMESTAMP }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   cleanup-workflows:
     runs-on: ubuntu-latest
-    needs: backup-and-release # 备份成功后再清理
+    needs: backup-and-release
     steps:
-      - name: 强力清理旧记录
+      # 清理 1: Update File Test
+      - name: 清理 Update File Test
         uses: Mattraks/delete-workflow-runs@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
-          retain_days: 0        # 0 = 删除所有非今天的记录
-          keep_minimum_runs: 1  # 至少保留最新的 1 条成功记录
-          delete_workflow_pattern: "Update File Test" # 清理主抓取任务的记录
+          retain_days: 0
+          keep_minimum_runs: 1
+          delete_workflow_pattern: "Update File Test"
+
+      # 清理 2: Generate Sub-READMEs
+      - name: 清理 Generate Sub-READMEs
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 1
+          delete_workflow_pattern: "Generate Sub-READMEs"
+
+      # 清理 3: Backup & Cleanup
+      - name: 清理 Backup & Cleanup
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 1
+          delete_workflow_pattern: "Backup & Cleanup"
