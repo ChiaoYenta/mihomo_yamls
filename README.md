@@ -127,7 +127,7 @@
 | **Magisk/KSU** | **Surfing** | 🟠 | (Root) 模块化透明代理，集成配置，开箱即用。 | 需 Magisk/KernelSU 环境，无独立 App 界面。 | [Github](https://github.com/GitMetaio/Surfing) |
 | **Magisk/KSU** | **AkashaProxy** | 🟠 | (Root) 基于 Shell 的透明代理管理工具。 | 功能强大但门槛较高。 | [Github](https://github.com/akashaProxy/akashaProxy) |
 | **Magisk/KSU** | **ClashMix** | 🟠 | (Root) 经典的 Clash 模块封装。 | 适合老用户。 | [Github](https://github.com/AXEVO/Clash-MIX) |
-| **Magisk/KSU** | **BoxProxy** | 🟠 | (Root) 全能核心 (Mihomo/Sing-box等)。 | 纯命令行/模块，无界面，新手劝退。 | [Github](https://github.com/boxproxy/box) |
+| **Magisk/KSU** | **BoxProxy** | 🟠 | (Root) 全能核心 (Mihomo/Sing-box等)。 | 命令行/模块，有界面，新手劝退，仅telegram频道发布。 | [Github](https://github.com/boxproxy/box) |
 |  |  |  |  |  |  |
 | **iOS** | **Stash** ($5.99) | 🟢 | 强大的分流与重写，集成 MitM。 | 配置文件与标准 Mihomo 不完全互通，新协议跟进慢。 | [App Store](https://apps.apple.com/app/stash/id1596063349) |
 | **iOS** | **Pharos Pro** ($2.99) | 🟢 | 一份配置通杀全平台，兼容性好。 | 佛系更新，缺席极个别 2025 新协议。 | [App Store](https://apps.apple.com/us/app/pharos-pro/id1456610173) |
