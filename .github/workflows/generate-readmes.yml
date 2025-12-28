@@ -25,16 +25,21 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: 运行生成脚本
+      - name: 安装依赖
+        run: pip install pyyaml
+
+      - name: 运行智能对比生成脚本
         run: |
           python3 -c '
           import os
           import urllib.parse
+          import yaml
+          import datetime
 
-          # 仓库基础链接
+          # --- 配置区域 ---
           REPO_URL = "https://github.com/${{ github.repository }}/blob/main"
           
-          # 文件夹名称映射（让标题更友好）
+          # 文件夹显示名称映射
           DIR_MAP = {
               "Official_Examples": "Mihomo 官方示例 (Official)",
               "General_Config": "通用进阶配置 (General Config)",
@@ -42,66 +47,208 @@ jobs:
               "Mobile_Modules": "Android 手机模块 (Mobile Modules)"
           }
 
-          # 忽略的文件和目录
+          # 忽略的文件
           IGNORE_DIRS = [".git", ".github"]
-          IGNORE_FILES = ["README.md", "LICENSE"]
+          IGNORE_FILES = ["README.md", "LICENSE", "release_body.md"]
 
-          def generate_readme(root_path, dirs, files):
-              # 获取相对路径
+          # --- 辅助函数 ---
+
+          def safe_get(data, keys, default="N/A"):
+              val = data
+              try:
+                  for key in keys:
+                      val = val[key]
+                  return val
+              except:
+                  return default
+
+          def get_file_size(path):
+              try:
+                  size = os.path.getsize(path)
+                  if size < 1024: return f"{size} B"
+                  return f"{size/1024:.1f} KB"
+              except: return "Unknown"
+
+          def analyze_single_config(file_path):
+              """解析单个 YAML 并返回结构化数据"""
+              try:
+                  with open(file_path, "r", encoding="utf-8") as f:
+                      data = yaml.safe_load(f)
+                      
+                  # 基础指标提取
+                  info = {}
+                  info["mixed_port"] = safe_get(data, ["mixed-port"], "❌")
+                  info["http_port"] = safe_get(data, ["port"], "❌")
+                  info["mode"] = safe_get(data, ["mode"], "Rule")
+                  info["ipv6"] = "✅" if str(safe_get(data, ["ipv6"])).lower() == "true" else "🚫"
+                  info["allow_lan"] = "✅" if str(safe_get(data, ["allow-lan"])).lower() == "true" else "🚫"
+                  
+                  # 进阶指标
+                  info["tun"] = "✅ 开启" if safe_get(data, ["tun", "enable"], False) else "🚫 关闭"
+                  
+                  # 数量统计
+                  groups = data.get("proxy-groups", [])
+                  info["group_count"] = len(groups) if groups else 0
+                  
+                  rules = data.get("rules", [])
+                  info["rule_count"] = len(rules) if rules else 0
+                  
+                  # 策略组详情 (用于生成详细报告)
+                  info["groups_raw"] = []
+                  for pg in groups:
+                      name = pg.get("name", "Unknown")
+                      type_ = pg.get("type", "select")
+                      icon = "🚀"
+                      if "auto" in type_ or "url-test" in type_: icon = "♻️"
+                      elif "fallback" in type_: icon = "🔧"
+                      elif "load-balance" in type_: icon = "⚖️"
+                      elif "select" in type_: icon = "👆"
+                      info["groups_raw"].append(f"| {icon} {name} | `{type_}` |")
+
+                  # DNS 详情
+                  info["dns_raw"] = []
+                  dns = data.get("dns", {})
+                  if dns.get("enable", False):
+                      for ns in dns.get("nameserver", []):
+                          if isinstance(ns, str):
+                              provider = "DoT" if "tls://" in ns else "DoH" if "https://" in ns else "UDP"
+                              info["dns_raw"].append(f"| {provider} | `{ns}` |")
+                  
+                  return info
+              except Exception as e:
+                  return None
+
+          def generate_comparison_table(configs_data):
+              """生成横向对比表格"""
+              # 表头
+              headers = ["特性 / 文件", "大小 (Size)"] 
+              for filename in configs_data.keys():
+                  headers.append(f"`{filename}`")
+              
+              lines = []
+              lines.append("| " + " | ".join(headers) + " |")
+              lines.append("| :--- | :--- " + "| :--- " * len(configs_data) + "|")
+              
+              # 定义要对比的行
+              rows = [
+                  ("mixed_port", "混合端口"),
+                  ("mode", "运行模式"),
+                  ("tun", "TUN 模式"),
+                  ("ipv6", "IPv6"),
+                  ("allow_lan", "允许局域网"),
+                  ("group_count", "策略组数量"),
+                  ("rule_count", "规则条数"),
+              ]
+
+              # 填充第一行：文件大小
+              size_row = ["**文件大小**", "-"]
+              for filename, data in configs_data.items():
+                  size_row.append(data["file_size"])
+              lines.append("| " + " | ".join(size_row) + " |")
+
+              # 填充其他特性行
+              for key, label in rows:
+                  row_content = [f"**{label}**", "-"]
+                  for filename, data in configs_data.items():
+                      val = data.get("parsed", {}).get(key, "N/A")
+                      if key in ["group_count", "rule_count"]:
+                          val = f"**{val}**"
+                      row_content.append(str(val))
+                  lines.append("| " + " | ".join(row_content) + " |")
+              
+              return "\n".join(lines)
+
+          def generate_readme(root_path, files):
               rel_path = os.path.relpath(root_path, ".")
-              if rel_path == ".": return
-
-              # 获取文件夹名称
               folder_name = os.path.basename(root_path)
-              
-              # 尝试获取更友好的标题（如果是顶级目录）
-              display_title = DIR_MAP.get(folder_name, folder_name)
+              title = DIR_MAP.get(folder_name, folder_name)
 
-              # 准备 Markdown 内容
-              content = []
-              content.append(f"# 📂 {display_title}\n")
-              content.append("> 自动生成的文件列表 / Automatically generated file list.\n")
+              # 1. 扫描并解析所有 YAML
+              configs_data = {} 
+              valid_yaml_files = []
               
-              # 计算返回层级 (用于返回主页链接)
+              for f in sorted(files):
+                  if f.lower().endswith((".yaml", ".yml")) and f not in IGNORE_FILES:
+                      full_path = os.path.join(root_path, f)
+                      parsed_info = analyze_single_config(full_path)
+                      
+                      if parsed_info and (parsed_info["group_count"] > 0 or parsed_info["rule_count"] > 0):
+                          configs_data[f] = {
+                              "file_size": get_file_size(full_path),
+                              "parsed": parsed_info
+                          }
+                          valid_yaml_files.append(f)
+
+              # --- 开始构建 Markdown ---
+              content = []
+              content.append(f"# 📂 {title}\n")
+              
               depth = rel_path.count(os.sep) + 1
               back_link = "../" * depth + "README.md"
               content.append(f"[🔙 返回主页 (Return to Home)]({back_link})\n")
+
+              content.append("> 🤖 **自动分析报告** | Auto-generated Report\n")
+              content.append(f"> 本目录包含 **{len(valid_yaml_files)}** 个主要配置文件。\n")
+
+              if len(configs_data) > 1:
+                  content.append("## ⚔️ 配置横向对比 (Comparison)\n")
+                  content.append(generate_comparison_table(configs_data))
+                  content.append("\n")
               
-              content.append("## 📄 文件列表 (Files)\n")
-              content.append("| 文件名 (Filename) | 大小 (Size) | 在线查看 (Link) |")
+              if configs_data:
+                  content.append("## 📄 配置文件详解 (Details)\n")
+                  for filename, data in configs_data.items():
+                      info = data["parsed"]
+                      file_url = f"{REPO_URL}/{urllib.parse.quote(rel_path)}/{urllib.parse.quote(filename)}"
+                      
+                      content.append(f"### 📝 {filename}")
+                      # --- 修复点：这里加上了引号 ---
+                      content.append(f"- **大小**: {data["file_size"]}") 
+                      content.append(f"- **链接**: [查看源码]({file_url})")
+                      
+                      if info["groups_raw"]:
+                          content.append(f"\n<details>")
+                          content.append(f"<summary><b>🔎 点击查看策略组架构 ({info["group_count"]}个)</b></summary>\n")
+                          content.append("| 策略组 (Group) | 类型 (Type) |")
+                          content.append("| :--- | :--- |")
+                          content.extend(info["groups_raw"][:15])
+                          if len(info["groups_raw"]) > 15:
+                              content.append(f"| ... | 还有 {len(info["groups_raw"])-15} 个 |")
+                          content.append(f"\n</details>\n")
+                      
+                      if info["dns_raw"]:
+                          content.append(f"\n<details>")
+                          content.append(f"<summary><b>🌐 点击查看 DNS 配置</b></summary>\n")
+                          content.append("| 类型 | 服务器 |")
+                          content.append("| :--- | :--- |")
+                          content.extend(info["dns_raw"])
+                          content.append(f"\n</details>\n")
+                      
+                      content.append("\n---\n")
+
+              content.append("## 📦 所有文件列表 (File List)\n")
+              content.append("| 文件名 | 大小 | 链接 |")
               content.append("| :--- | :--- | :--- |")
+              for f in sorted(files):
+                  if f in IGNORE_FILES or f.startswith("."): continue
+                  f_path = os.path.join(root_path, f)
+                  f_url = f"{REPO_URL}/{urllib.parse.quote(rel_path)}/{urllib.parse.quote(f)}"
+                  content.append(f"| `{f}` | {get_file_size(f_path)} | [查看]({f_url}) |")
 
-              file_count = 0
-              # 遍历文件
-              for file in sorted(files):
-                  if file in IGNORE_FILES or file.startswith("."):
-                      continue
-                  
-                  file_path = os.path.join(root_path, file)
-                  file_url = f"{REPO_URL}/{urllib.parse.quote(rel_path)}/{urllib.parse.quote(file)}"
-                  
-                  # 获取文件大小
-                  size_bytes = os.path.getsize(file_path)
-                  if size_bytes < 1024:
-                      size_str = f"{size_bytes} B"
-                  else:
-                      size_str = f"{size_bytes / 1024:.1f} KB"
+              return "\n".join(content)
 
-                  content.append(f"| **{file}** | {size_str} | [查看配置]({file_url}) |")
-                  file_count += 1
-
-              # 只有当目录下有文件时才写入 README
-              if file_count > 0:
-                  with open(os.path.join(root_path, "README.md"), "w", encoding="utf-8") as f:
-                      f.write("\n".join(content))
-                  print(f"Generated README for: {rel_path}")
-
-          # 遍历目录树
+          print("Starting Comparison README generation...")
           for root, dirs, files in os.walk("."):
-              # 过滤忽略的目录
               dirs[:] = [d for d in dirs if d not in IGNORE_DIRS]
               
-              generate_readme(root, dirs, files)
+              rel_path = os.path.relpath(root, ".")
+              if rel_path == ".": continue
+
+              if len([f for f in files if f not in IGNORE_FILES]) > 0:
+                  readme_txt = generate_readme(root, files)
+                  with open(os.path.join(root, "README.md"), "w", encoding="utf-8") as f:
+                      f.write(readme_txt)
+                  print(f"Generated for: {rel_path}")
           '
 
       - name: 提交更改
@@ -110,6 +257,6 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
           git add */**/README.md
-          git commit -m "Docs: Auto-generate sub-folder READMEs" || echo "No changes to commit"
+          git commit -m "Docs: Auto-generate config comparison tables" || echo "No changes to commit"
           
           git push origin HEAD:${{ github.ref_name }}
