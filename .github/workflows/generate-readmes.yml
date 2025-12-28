@@ -78,13 +78,11 @@ jobs:
                       content = f.read()
               except UnicodeDecodeError:
                   try:
-                      # 尝试 GBK/GB18030 (常见于中文 Windows 环境)
                       with open(file_path, "r", encoding="gb18030", errors="ignore") as f:
                           content = f.read()
                   except Exception:
                       return None
               
-              # 修复 YAML 不允许 Tab 缩进的问题
               if "\t" in content:
                   content = content.replace("\t", "  ")
               
@@ -95,25 +93,22 @@ jobs:
               try:
                   raw_content = read_file_content(file_path)
                   if not raw_content:
-                      print(f"Warning: Could not read content of {file_path}")
                       return None
 
-                  # 使用 SafeLoader 加载
                   data = yaml.safe_load(raw_content)
                   
                   if not isinstance(data, dict):
-                      print(f"Warning: {file_path} is not a valid YAML dictionary")
                       return None
 
                   info = {}
                   
-                  # --- 1. 基础信息 ---
+                  # 1. 基础信息
                   info["mode"] = safe_get(data, ["mode"], "Rule")
                   info["ipv6"] = "✅" if str(safe_get(data, ["ipv6"])).lower() == "true" else "🚫"
                   info["allow_lan"] = "✅" if str(safe_get(data, ["allow-lan"])).lower() == "true" else "🚫"
                   info["tun"] = "✅ 开启" if safe_get(data, ["tun", "enable"], False) else "🚫 关闭"
 
-                  # --- 2. 端口信息提取 ---
+                  # 2. 端口信息提取
                   info["port_mixed"] = safe_get(data, ["mixed-port"], "-")
                   info["port_http"] = safe_get(data, ["port"], "-")
                   info["port_socks"] = safe_get(data, ["socks-port"], "-")
@@ -139,14 +134,14 @@ jobs:
                   if info["port_tproxy"] != "-": info["ports_display"].append(f"| TProxy | {info["port_tproxy"]} | 透明代理 (UDP) |")
                   if info["port_ctrl"] != "-": info["ports_display"].append(f"| Controller | {info["port_ctrl"]} | 控制面板 |")
 
-                  # --- 3. 统计信息 ---
+                  # 3. 统计信息
                   groups = data.get("proxy-groups", [])
                   info["group_count"] = len(groups) if isinstance(groups, list) else 0
                   
                   rules = data.get("rules", [])
                   info["rule_count"] = len(rules) if isinstance(rules, list) else 0
                   
-                  # --- 4. 详情提取 ---
+                  # 4. 详情提取
                   info["groups_raw"] = []
                   if isinstance(groups, list):
                       for pg in groups:
@@ -196,13 +191,15 @@ jobs:
 
               size_row = ["**文件大小**", "-"]
               for filename, data in configs_data.items():
-                  size_row.append(data["file_size"])
+                  # 🔴 修复点：使用 .get 防止崩溃
+                  size_row.append(data.get("file_size", "N/A"))
               lines.append("| " + " | ".join(size_row) + " |")
 
               for key, label in rows:
                   row_content = [f"**{label}**", "-"]
                   for filename, data in configs_data.items():
-                      val = data.get("parsed", {}).get(key, "N/A")
+                      # 🔴 修复点：多层级安全获取
+                      val = data.get("parsed", {}).get(key, "未设置")
                       if key in ["group_count", "rule_count"]:
                           val = f"**{val}**"
                       row_content.append(str(val))
@@ -249,40 +246,49 @@ jobs:
               if configs_data:
                   content.append("## 📄 配置文件详解 (Details)\n")
                   for filename, data in configs_data.items():
-                      info = data["parsed"]
+                      # 🔴 修复点：获取 info 字典也用 .get，防止为空
+                      info = data.get("parsed", {})
+                      
                       file_url = f"{REPO_URL}/{urllib.parse.quote(rel_path)}/{urllib.parse.quote(filename)}"
                       
                       content.append(f"### 📝 {filename}")
-                      # --- 修复点：加上了引号 ---
-                      content.append(f"- **大小**: {data['file_size']}") 
+                      # 🔴 修复点：核心错误位置修复，没有 file_size 则显示未设置
+                      content.append(f"- **大小**: {data.get('file_size', '未设置')}") 
                       content.append(f"- **链接**: [查看源码]({file_url})")
 
-                      if info["ports_display"] or info["listeners_raw"]:
+                      # 🔴 修复点：以下所有读取都改为 .get()
+                      ports_display = info.get("ports_display", [])
+                      listeners_raw = info.get("listeners_raw", [])
+                      
+                      if ports_display or listeners_raw:
                           content.append(f"\n#### 📶 网络端口配置 (Ports)")
                           content.append("| 类型 | 端口/地址 | 说明 |")
                           content.append("| :--- | :--- | :--- |")
-                          content.extend(info["ports_display"])
-                          if info["listeners_raw"]:
-                              for l in info["listeners_raw"]:
+                          content.extend(ports_display)
+                          if listeners_raw:
+                              for l in listeners_raw:
                                   content.append(l)
                           content.append("\n")
 
-                      if info["groups_raw"]:
+                      groups_raw = info.get("groups_raw", [])
+                      if groups_raw:
+                          group_count = info.get("group_count", 0)
                           content.append(f"<details>")
-                          content.append(f"<summary><b>🔎 点击查看策略组架构 ({info['group_count']}个)</b></summary>\n")
+                          content.append(f"<summary><b>🔎 点击查看策略组架构 ({group_count}个)</b></summary>\n")
                           content.append("| 策略组 (Group) | 类型 (Type) |")
                           content.append("| :--- | :--- |")
-                          content.extend(info["groups_raw"][:15])
-                          if len(info["groups_raw"]) > 15:
-                              content.append(f"| ... | 还有 {len(info['groups_raw'])-15} 个 |")
+                          content.extend(groups_raw[:15])
+                          if len(groups_raw) > 15:
+                              content.append(f"| ... | 还有 {len(groups_raw)-15} 个 |")
                           content.append(f"\n</details>\n")
                       
-                      if info["dns_raw"]:
+                      dns_raw = info.get("dns_raw", [])
+                      if dns_raw:
                           content.append(f"<details>")
                           content.append(f"<summary><b>🌐 点击查看 DNS 配置</b></summary>\n")
                           content.append("| 类型 | 服务器 |")
                           content.append("| :--- | :--- |")
-                          content.extend(info["dns_raw"])
+                          content.extend(dns_raw)
                           content.append(f"\n</details>\n")
                       
                       content.append("\n---\n")
