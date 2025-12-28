@@ -191,14 +191,13 @@ jobs:
 
               size_row = ["**文件大小**", "-"]
               for filename, data in configs_data.items():
-                  # 🔴 修复点：使用 .get 防止崩溃
+                  # 修复：加上了引号 'file_size'
                   size_row.append(data.get("file_size", "N/A"))
               lines.append("| " + " | ".join(size_row) + " |")
 
               for key, label in rows:
                   row_content = [f"**{label}**", "-"]
                   for filename, data in configs_data.items():
-                      # 🔴 修复点：多层级安全获取
                       val = data.get("parsed", {}).get(key, "未设置")
                       if key in ["group_count", "rule_count"]:
                           val = f"**{val}**"
@@ -246,17 +245,15 @@ jobs:
               if configs_data:
                   content.append("## 📄 配置文件详解 (Details)\n")
                   for filename, data in configs_data.items():
-                      # 🔴 修复点：获取 info 字典也用 .get，防止为空
                       info = data.get("parsed", {})
                       
                       file_url = f"{REPO_URL}/{urllib.parse.quote(rel_path)}/{urllib.parse.quote(filename)}"
                       
                       content.append(f"### 📝 {filename}")
-                      # 🔴 修复点：核心错误位置修复，没有 file_size 则显示未设置
+                      # 修复：加上了引号 'file_size' 和 '未设置'
                       content.append(f"- **大小**: {data.get('file_size', '未设置')}") 
                       content.append(f"- **链接**: [查看源码]({file_url})")
 
-                      # 🔴 修复点：以下所有读取都改为 .get()
                       ports_display = info.get("ports_display", [])
                       listeners_raw = info.get("listeners_raw", [])
                       
