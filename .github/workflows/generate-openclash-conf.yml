@@ -1,0 +1,174 @@
+name: Generate OpenClash Conf
+
+on:
+  workflow_dispatch: # 允许手动触发
+  workflow_run:      # 监听 "Update File Test" 完成后触发
+    workflows: ["Update File Test"]
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+jobs:
+  generate-conf:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    steps:
+      - name: 检查代码仓库
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: 安装依赖
+        run: pip install pyyaml
+
+      - name: 生成 OpenClash 专用配置与文档
+        env:
+          GITHUB_REPO: ${{ github.repository }}
+        run: |
+          python3 -c '
+          import os
+          import yaml
+          import shutil
+
+          # --- 配置区域 ---
+          # 定义需要处理的源目录
+          SOURCE_DIRS = [
+              "Official_Examples",
+              "General_Config",
+              "Smart_Mode",
+              "Mobile_Modules"
+          ]
+          
+          OUTPUT_BASE = "openclash_overview"
+          REPO_RAW_BASE = f"https://raw.githubusercontent.com/{os.environ.get('GITHUB_REPO')}/main"
+
+          # 防止 yaml 加载报错
+          yaml.add_multi_constructor("!", lambda loader, suffix, node: None, Loader=yaml.SafeLoader)
+
+          def generate_conf_content(filename, rel_path, providers):
+              """生成 OpenClash .conf 文件内容"""
+              raw_url = f"{REPO_RAW_BASE}/{rel_path}/{filename}"
+              # 替换空格为 %20 (虽然 GitHub Raw 通常能处理，但规范化更好)
+              raw_url = raw_url.replace(" ", "%20")
+              
+              lines = []
+              lines.append("[General]")
+              lines.append("DISABLE_UDP_QUIC = 1")
+              lines.append("")
+              lines.append("#restart: true 代表更新后重启插件，false 代表不重启插件")
+              lines.append("#force: true 代表强制下载，false 代表不强制下载（当文件不存在时会自动下载）")
+              lines.append("#cron: 定时下载时间，格式为标准的 cron 表达式，0 代表不启用定时下载")
+              lines.append("#示例：每天凌晨6点下载一次")
+              lines.append("#cron=0 6 * * *")
+              
+              # 生成 DOWNLOAD_FILE 配置
+              # 假设目标机器上的文件名与仓库文件名一致
+              lines.append(f"DOWNLOAD_FILE = url={raw_url}, path=/etc/openclash/config/{filename}, cron=0 6 * * *, force=false")
+              lines.append("")
+              lines.append("#将模板作为默认配置文件")
+              lines.append(f"CONFIG_FILE = /etc/openclash/config/{filename}")
+              lines.append("")
+              lines.append("#指定展示订阅信息的 URL 地址")
+              lines.append("SUB_INFO_URL = $EN_KEY1")
+              lines.append("")
+              lines.append("[Overwrite]")
+              lines.append("#EN_KEY 为对应模块需要用户指定的环境变量值, EN_KEY1=URL1;EN_KEY2=URL2;EN_KEY3=URL3")
+              lines.append("#其他 Ruby 编辑函数请参考 openclash_custom_overwrite.sh")
+              
+              # 动态生成 Ruby 编辑逻辑
+              if providers:
+                  index = 1
+                  for provider_name in providers:
+                      # 这里的逻辑是：将 YAML 中的 proxy-provider 的 url 替换为环境变量
+                      line = f"ruby_map_edit \"$CONFIG_FILE\" \"['proxy-providers']\" \"{provider_name}\" \"['url']\" \"$EN_KEY{index}\""
+                      lines.append(line)
+                      index += 1
+              else:
+                  lines.append("# 未检测到 proxy-providers，无需覆盖订阅链接")
+
+              return "\n".join(lines)
+
+          def process_file(source_root, filename):
+              full_path = os.path.join(source_root, filename)
+              
+              # 1. 解析 YAML 提取 Providers
+              try:
+                  with open(full_path, "r", encoding="utf-8") as f:
+                      content = f.read()
+                      # 处理可能的 Tab 缩进问题
+                      if "\t" in content: content = content.replace("\t", "  ")
+                      data = yaml.safe_load(content)
+                  
+                  if not isinstance(data, dict):
+                      return
+
+                  providers = []
+                  if "proxy-providers" in data and isinstance(data["proxy-providers"], dict):
+                      # 获取所有 Provider 的名称 (key)
+                      providers = list(data["proxy-providers"].keys())
+                  
+                  # 2. 准备输出路径
+                  # 计算相对路径：例如 General_Config/666OS
+                  rel_dir = os.path.relpath(source_root, ".")
+                  # 目标目录：openclash_overview/General_Config/666OS
+                  target_dir = os.path.join(OUTPUT_BASE, rel_dir)
+                  os.makedirs(target_dir, exist_ok=True)
+
+                  # 3. 生成并写入 .conf 文件
+                  conf_name = os.path.splitext(filename)[0] + ".conf"
+                  conf_content = generate_conf_content(filename, rel_dir.replace(os.sep, "/"), providers)
+                  
+                  target_conf_path = os.path.join(target_dir, conf_name)
+                  with open(target_conf_path, "w", encoding="utf-8") as f:
+                      f.write(conf_content)
+                  
+                  print(f"Generated: {target_conf_path}")
+
+                  # 4. 复制同目录下的 README.md (如果存在且尚未复制)
+                  source_readme = os.path.join(source_root, "README.md")
+                  target_readme = os.path.join(target_dir, "README.md")
+                  
+                  if os.path.exists(source_readme):
+                      shutil.copy2(source_readme, target_readme)
+                      # print(f"Copied README to: {target_dir}")
+
+              except Exception as e:
+                  print(f"Skipping {filename}: {e}")
+
+          # 主循环
+          print("Starting OpenClash Config Generation...")
+          
+          # 清理旧目录（可选，保持干净）
+          if os.path.exists(OUTPUT_BASE):
+              shutil.rmtree(OUTPUT_BASE)
+          os.makedirs(OUTPUT_BASE, exist_ok=True)
+
+          for source_dir in SOURCE_DIRS:
+              if not os.path.exists(source_dir): continue
+              
+              for root, dirs, files in os.walk(source_dir):
+                  # 过滤掉 .git 等隐藏文件夹
+                  dirs[:] = [d for d in dirs if not d.startswith('.')]
+                  
+                  for file in files:
+                      if file.endswith(('.yaml', '.yml')):
+                          process_file(root, file)
+          '
+
+      - name: 提交并推送更改
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          git add openclash_overview
+          # 仅在有变动时提交
+          git commit -m "Docs: Auto generate OpenClash override configs" || echo "No changes to commit"
+          
+          git push origin HEAD:${{ github.ref_name }}
