@@ -4,27 +4,35 @@
 
 > 🤖 **自动分析报告** | Auto-generated Report
 
-> 本目录包含 **5** 个主要配置文件。
-
 ## ⚔️ 配置横向对比 (Comparison)
 
-| 特性 / 文件 | 大小 (Size) | `clash-all-fallback.yaml` | `clash-fallback-all.yaml` | `clash-fallback-dialer.yaml` | `clash-fallback-std.yaml` | `clash-fallback.yaml` |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **文件大小** | - | 18.9 KB | 20.3 KB | 17.9 KB | 19.2 KB | 17.4 KB |
-| **混合端口** | - | 7893 | 7893 | 7893 | 7893 | 7893 |
-| **运行模式** | - | rule | rule | rule | rule | rule |
-| **TUN 模式** | - | ✅ 开启 | ✅ 开启 | ✅ 开启 | ✅ 开启 | ✅ 开启 |
-| **IPv6** | - | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **允许局域网** | - | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **策略组数量** | - | **53** | **61** | **35** | **36** | **34** |
-| **规则条数** | - | **42** | **53** | **43** | **43** | **43** |
+| 特性 / 文件 | `clash-all-fallback.yaml` | `clash-fallback-all.yaml` | `clash-fallback-dialer.yaml` | `clash-fallback-std.yaml` | `clash-fallback.yaml` |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **文件大小** | 18.9 KB | 20.3 KB | 17.9 KB | 19.2 KB | 17.4 KB |
+| **混合端口** | 7893 | 7893 | 7893 | 7893 | 7893 |
+| **控制面板** | 0.0.0.0:9090 | 0.0.0.0:9090 | 0.0.0.0:9090 | 0.0.0.0:9090 | 0.0.0.0:9090 |
+| **运行模式** | rule | rule | rule | rule | rule |
+| **TUN 模式** | ✅ 开启 | ✅ 开启 | ✅ 开启 | ✅ 开启 | ✅ 开启 |
+| **策略组数** | **53** | **61** | **35** | **36** | **34** |
+| **规则条数** | **42** | **53** | **43** | **43** | **43** |
 
 
 ## 📄 配置文件详解 (Details)
 
 ### 📝 clash-all-fallback.yaml
 - **大小**: 18.9 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/liandu2024/clash-all-fallback.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/liandu2024/clash-all-fallback.yaml)
+
+#### 📶 网络端口配置 (Ports)
+| 类型 | 端口/地址 | 说明 |
+| :--- | :--- | :--- |
+| Mixed (混合) | 7893 | HTTP/SOCKS |
+| HTTP | 7890 | 仅 HTTP |
+| SOCKS5 | 7891 | 仅 SOCKS |
+| TProxy | 7895 | 透明代理 (UDP) |
+| Redirect | 7892 | 透明代理 (TCP) |
+| Controller | 0.0.0.0:9090 | 控制面板 |
+
 
 <details>
 <summary><b>🔎 点击查看策略组架构 (53个)</b></summary>
@@ -50,7 +58,6 @@
 
 </details>
 
-
 <details>
 <summary><b>🌐 点击查看 DNS 配置</b></summary>
 
@@ -65,7 +72,18 @@
 
 ### 📝 clash-fallback-all.yaml
 - **大小**: 20.3 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback-all.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback-all.yaml)
+
+#### 📶 网络端口配置 (Ports)
+| 类型 | 端口/地址 | 说明 |
+| :--- | :--- | :--- |
+| Mixed (混合) | 7893 | HTTP/SOCKS |
+| HTTP | 7890 | 仅 HTTP |
+| SOCKS5 | 7891 | 仅 SOCKS |
+| TProxy | 7895 | 透明代理 (UDP) |
+| Redirect | 7892 | 透明代理 (TCP) |
+| Controller | 0.0.0.0:9090 | 控制面板 |
+
 
 <details>
 <summary><b>🔎 点击查看策略组架构 (61个)</b></summary>
@@ -91,7 +109,6 @@
 
 </details>
 
-
 <details>
 <summary><b>🌐 点击查看 DNS 配置</b></summary>
 
@@ -106,7 +123,18 @@
 
 ### 📝 clash-fallback-dialer.yaml
 - **大小**: 17.9 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback-dialer.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback-dialer.yaml)
+
+#### 📶 网络端口配置 (Ports)
+| 类型 | 端口/地址 | 说明 |
+| :--- | :--- | :--- |
+| Mixed (混合) | 7893 | HTTP/SOCKS |
+| HTTP | 7890 | 仅 HTTP |
+| SOCKS5 | 7891 | 仅 SOCKS |
+| TProxy | 7895 | 透明代理 (UDP) |
+| Redirect | 7892 | 透明代理 (TCP) |
+| Controller | 0.0.0.0:9090 | 控制面板 |
+
 
 <details>
 <summary><b>🔎 点击查看策略组架构 (35个)</b></summary>
@@ -132,7 +160,6 @@
 
 </details>
 
-
 <details>
 <summary><b>🌐 点击查看 DNS 配置</b></summary>
 
@@ -147,7 +174,18 @@
 
 ### 📝 clash-fallback-std.yaml
 - **大小**: 19.2 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback-std.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback-std.yaml)
+
+#### 📶 网络端口配置 (Ports)
+| 类型 | 端口/地址 | 说明 |
+| :--- | :--- | :--- |
+| Mixed (混合) | 7893 | HTTP/SOCKS |
+| HTTP | 7890 | 仅 HTTP |
+| SOCKS5 | 7891 | 仅 SOCKS |
+| TProxy | 7895 | 透明代理 (UDP) |
+| Redirect | 7892 | 透明代理 (TCP) |
+| Controller | 0.0.0.0:9090 | 控制面板 |
+
 
 <details>
 <summary><b>🔎 点击查看策略组架构 (36个)</b></summary>
@@ -173,7 +211,6 @@
 
 </details>
 
-
 <details>
 <summary><b>🌐 点击查看 DNS 配置</b></summary>
 
@@ -188,7 +225,18 @@
 
 ### 📝 clash-fallback.yaml
 - **大小**: 17.4 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback.yaml)
+
+#### 📶 网络端口配置 (Ports)
+| 类型 | 端口/地址 | 说明 |
+| :--- | :--- | :--- |
+| Mixed (混合) | 7893 | HTTP/SOCKS |
+| HTTP | 7890 | 仅 HTTP |
+| SOCKS5 | 7891 | 仅 SOCKS |
+| TProxy | 7895 | 透明代理 (UDP) |
+| Redirect | 7892 | 透明代理 (TCP) |
+| Controller | 0.0.0.0:9090 | 控制面板 |
+
 
 <details>
 <summary><b>🔎 点击查看策略组架构 (34个)</b></summary>
@@ -214,7 +262,6 @@
 
 </details>
 
-
 <details>
 <summary><b>🌐 点击查看 DNS 配置</b></summary>
 
@@ -231,8 +278,8 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `clash-all-fallback.yaml` | 18.9 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/liandu2024/clash-all-fallback.yaml) |
-| `clash-fallback-all.yaml` | 20.3 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback-all.yaml) |
-| `clash-fallback-dialer.yaml` | 17.9 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback-dialer.yaml) |
-| `clash-fallback-std.yaml` | 19.2 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback-std.yaml) |
-| `clash-fallback.yaml` | 17.4 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback.yaml) |
+| `clash-all-fallback.yaml` | 18.9 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/liandu2024/clash-all-fallback.yaml) |
+| `clash-fallback-all.yaml` | 20.3 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback-all.yaml) |
+| `clash-fallback-dialer.yaml` | 17.9 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback-dialer.yaml) |
+| `clash-fallback-std.yaml` | 19.2 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback-std.yaml) |
+| `clash-fallback.yaml` | 17.4 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/liandu2024/clash-fallback.yaml) |

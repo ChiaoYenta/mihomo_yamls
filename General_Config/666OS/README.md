@@ -4,27 +4,35 @@
 
 > 🤖 **自动分析报告** | Auto-generated Report
 
-> 本目录包含 **2** 个主要配置文件。
-
 ## ⚔️ 配置横向对比 (Comparison)
 
-| 特性 / 文件 | 大小 (Size) | `MihomoPro_Config.yaml` | `OneTouch_Config.yaml` |
-| :--- | :--- | :--- | :--- |
-| **文件大小** | - | 24.3 KB | 13.1 KB |
-| **混合端口** | - | 7893 | 7893 |
-| **运行模式** | - | rule | rule |
-| **TUN 模式** | - | 🚫 关闭 | 🚫 关闭 |
-| **IPv6** | - | ✅ | ✅ |
-| **允许局域网** | - | ✅ | ✅ |
-| **策略组数量** | - | **52** | **15** |
-| **规则条数** | - | **40** | **23** |
+| 特性 / 文件 | `MihomoPro_Config.yaml` | `OneTouch_Config.yaml` |
+| :--- | :--- | :--- |
+| **文件大小** | 24.3 KB | 13.1 KB |
+| **混合端口** | 7893 | 7893 |
+| **控制面板** | 127.0.0.1:9090 | 127.0.0.1:9090 |
+| **运行模式** | rule | rule |
+| **TUN 模式** | 🚫 关闭 | 🚫 关闭 |
+| **策略组数** | **52** | **15** |
+| **规则条数** | **40** | **23** |
 
 
 ## 📄 配置文件详解 (Details)
 
 ### 📝 MihomoPro_Config.yaml
 - **大小**: 24.3 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/666OS/MihomoPro_Config.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/666OS/MihomoPro_Config.yaml)
+
+#### 📶 网络端口配置 (Ports)
+| 类型 | 端口/地址 | 说明 |
+| :--- | :--- | :--- |
+| Mixed (混合) | 7893 | HTTP/SOCKS |
+| HTTP | 7890 | 仅 HTTP |
+| SOCKS5 | 7891 | 仅 SOCKS |
+| TProxy | 7895 | 透明代理 (UDP) |
+| Redirect | 7892 | 透明代理 (TCP) |
+| Controller | 127.0.0.1:9090 | 控制面板 |
+
 
 <details>
 <summary><b>🔎 点击查看策略组架构 (52个)</b></summary>
@@ -50,7 +58,6 @@
 
 </details>
 
-
 <details>
 <summary><b>🌐 点击查看 DNS 配置</b></summary>
 
@@ -66,7 +73,18 @@
 
 ### 📝 OneTouch_Config.yaml
 - **大小**: 13.1 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/666OS/OneTouch_Config.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/666OS/OneTouch_Config.yaml)
+
+#### 📶 网络端口配置 (Ports)
+| 类型 | 端口/地址 | 说明 |
+| :--- | :--- | :--- |
+| Mixed (混合) | 7893 | HTTP/SOCKS |
+| HTTP | 7890 | 仅 HTTP |
+| SOCKS5 | 7891 | 仅 SOCKS |
+| TProxy | 7895 | 透明代理 (UDP) |
+| Redirect | 7892 | 透明代理 (TCP) |
+| Controller | 127.0.0.1:9090 | 控制面板 |
+
 
 <details>
 <summary><b>🔎 点击查看策略组架构 (15个)</b></summary>
@@ -91,7 +109,6 @@
 
 </details>
 
-
 <details>
 <summary><b>🌐 点击查看 DNS 配置</b></summary>
 
@@ -109,5 +126,5 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `MihomoPro_Config.yaml` | 24.3 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/666OS/MihomoPro_Config.yaml) |
-| `OneTouch_Config.yaml` | 13.1 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/666OS/OneTouch_Config.yaml) |
+| `MihomoPro_Config.yaml` | 24.3 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/666OS/MihomoPro_Config.yaml) |
+| `OneTouch_Config.yaml` | 13.1 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/666OS/OneTouch_Config.yaml) |

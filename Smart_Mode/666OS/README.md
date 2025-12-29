@@ -4,27 +4,44 @@
 
 > 🤖 **自动分析报告** | Auto-generated Report
 
-> 本目录包含 **2** 个主要配置文件。
-
 ## ⚔️ 配置横向对比 (Comparison)
 
-| 特性 / 文件 | 大小 (Size) | `OneSmart_Config.yaml` | `OneSmart_Lite_Config.yaml` |
-| :--- | :--- | :--- | :--- |
-| **文件大小** | - | 21.4 KB | 13.2 KB |
-| **混合端口** | - | 7893 | 7893 |
-| **运行模式** | - | rule | rule |
-| **TUN 模式** | - | 🚫 关闭 | 🚫 关闭 |
-| **IPv6** | - | ✅ | ✅ |
-| **允许局域网** | - | ✅ | ✅ |
-| **策略组数量** | - | **31** | **16** |
-| **规则条数** | - | **36** | **21** |
+| 特性 / 文件 | `OneSmart_Config.yaml` | `OneSmart_Lite_Config.yaml` |
+| :--- | :--- | :--- |
+| **文件大小** | 21.4 KB | 13.2 KB |
+| **混合端口** | 7893 | 7893 |
+| **控制面板** | 127.0.0.1:9090 | 127.0.0.1:9090 |
+| **运行模式** | rule | rule |
+| **TUN 模式** | 🚫 关闭 | 🚫 关闭 |
+| **策略组数** | **31** | **16** |
+| **规则条数** | **36** | **21** |
 
 
 ## 📄 配置文件详解 (Details)
 
 ### 📝 OneSmart_Config.yaml
 - **大小**: 21.4 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/Smart_Mode/666OS/OneSmart_Config.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/666OS/OneSmart_Config.yaml)
+
+#### 📶 网络端口配置 (Ports)
+| 类型 | 端口/地址 | 说明 |
+| :--- | :--- | :--- |
+| Mixed (混合) | 7893 | HTTP/SOCKS |
+| HTTP | 7890 | 仅 HTTP |
+| SOCKS5 | 7891 | 仅 SOCKS |
+| TProxy | 7895 | 透明代理 (UDP) |
+| Redirect | 7892 | 透明代理 (TCP) |
+| Controller | 127.0.0.1:9090 | 控制面板 |
+| 👂 SS-IN | 10000 | shadowsocks |
+| 👂 MIXED-SG | 50000 | mixed |
+| 👂 MIXED-US | 50001 | mixed |
+| 👂 MIXED-TW | 50002 | mixed |
+| 👂 MIXED-HK | 50003 | mixed |
+| 👂 MIXED-JP | 50004 | mixed |
+| 👂 MIXED-KR | 50005 | mixed |
+| 👂 MIXED-EU | 50006 | mixed |
+| 👂 MIXED-AL | 50007 | mixed |
+
 
 <details>
 <summary><b>🔎 点击查看策略组架构 (31个)</b></summary>
@@ -50,7 +67,6 @@
 
 </details>
 
-
 <details>
 <summary><b>🌐 点击查看 DNS 配置</b></summary>
 
@@ -66,7 +82,18 @@
 
 ### 📝 OneSmart_Lite_Config.yaml
 - **大小**: 13.2 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/Smart_Mode/666OS/OneSmart_Lite_Config.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/666OS/OneSmart_Lite_Config.yaml)
+
+#### 📶 网络端口配置 (Ports)
+| 类型 | 端口/地址 | 说明 |
+| :--- | :--- | :--- |
+| Mixed (混合) | 7893 | HTTP/SOCKS |
+| HTTP | 7890 | 仅 HTTP |
+| SOCKS5 | 7891 | 仅 SOCKS |
+| TProxy | 7895 | 透明代理 (UDP) |
+| Redirect | 7892 | 透明代理 (TCP) |
+| Controller | 127.0.0.1:9090 | 控制面板 |
+
 
 <details>
 <summary><b>🔎 点击查看策略组架构 (16个)</b></summary>
@@ -92,7 +119,6 @@
 
 </details>
 
-
 <details>
 <summary><b>🌐 点击查看 DNS 配置</b></summary>
 
@@ -110,5 +136,5 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `OneSmart_Config.yaml` | 21.4 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/Smart_Mode/666OS/OneSmart_Config.yaml) |
-| `OneSmart_Lite_Config.yaml` | 13.2 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/Smart_Mode/666OS/OneSmart_Lite_Config.yaml) |
+| `OneSmart_Config.yaml` | 21.4 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/666OS/OneSmart_Config.yaml) |
+| `OneSmart_Lite_Config.yaml` | 13.2 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/666OS/OneSmart_Lite_Config.yaml) |

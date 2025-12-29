@@ -4,13 +4,18 @@
 
 > 🤖 **自动分析报告** | Auto-generated Report
 
-> 本目录包含 **1** 个主要配置文件。
-
 ## 📄 配置文件详解 (Details)
 
 ### 📝 mihomo.yaml
 - **大小**: 27.2 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/echs-top/mihomo.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/echs-top/mihomo.yaml)
+
+#### 📶 网络端口配置 (Ports)
+| 类型 | 端口/地址 | 说明 |
+| :--- | :--- | :--- |
+| Mixed (混合) | 7890 | HTTP/SOCKS |
+| Controller | 0.0.0.0:9090 | 控制面板 |
+
 
 <details>
 <summary><b>🔎 点击查看策略组架构 (40个)</b></summary>
@@ -36,7 +41,6 @@
 
 </details>
 
-
 <details>
 <summary><b>🌐 点击查看 DNS 配置</b></summary>
 
@@ -54,4 +58,4 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `mihomo.yaml` | 27.2 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/echs-top/mihomo.yaml) |
+| `mihomo.yaml` | 27.2 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/echs-top/mihomo.yaml) |

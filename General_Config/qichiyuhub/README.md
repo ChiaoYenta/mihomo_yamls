@@ -4,13 +4,17 @@
 
 > 🤖 **自动分析报告** | Auto-generated Report
 
-> 本目录包含 **1** 个主要配置文件。
-
 ## 📄 配置文件详解 (Details)
 
 ### 📝 config.yaml
 - **大小**: 12.8 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/qichiyuhub/config.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/qichiyuhub/config.yaml)
+
+#### 📶 网络端口配置 (Ports)
+| 类型 | 端口/地址 | 说明 |
+| :--- | :--- | :--- |
+| Mixed (混合) | 7890 | HTTP/SOCKS |
+
 
 <details>
 <summary><b>🔎 点击查看策略组架构 (26个)</b></summary>
@@ -36,7 +40,6 @@
 
 </details>
 
-
 <details>
 <summary><b>🌐 点击查看 DNS 配置</b></summary>
 
@@ -54,4 +57,4 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `config.yaml` | 12.8 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/qichiyuhub/config.yaml) |
+| `config.yaml` | 12.8 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/qichiyuhub/config.yaml) |
