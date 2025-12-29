@@ -1,0 +1,21 @@
+# 📁 Mobile_Modules
+
+> 手机模块配置 - Root 环境专用
+
+## 📋 配置文件列表
+
+| 文件路径 | 说明 |
+| :--- | :--- |
+| `AkashaProxy/akasha_config.conf` | OpenClash 覆写配置 |
+| `BoxProxy/config.conf` | OpenClash 覆写配置 |
+| `ClashMix/config.conf` | OpenClash 覆写配置 |
+| `Surfing/config.conf` | OpenClash 覆写配置 |
+
+## 📖 使用方法
+
+1. 在 OpenClash 插件中选择 **配置文件订阅**
+2. 将对应的 `.conf` 文件 Raw 链接填入订阅地址
+3. 配置环境变量 `EN_KEY1`、`EN_KEY2` 等为你的机场订阅链接
+4. 保存并更新配置
+
+[🔙 返回主目录](../README.md)
