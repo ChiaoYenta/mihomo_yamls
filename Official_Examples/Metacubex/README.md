@@ -21,7 +21,7 @@
 
 ### 📝 geox_config.yaml
 - **大小**: 5.2 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/Official_Examples/Metacubex/geox_config.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Official_Examples/Metacubex/geox_config.yaml)
 
 #### 📶 网络端口配置 (Ports)
 | 类型 | 端口/地址 | 说明 |
@@ -69,7 +69,7 @@
 
 ### 📝 rule-set_config.yaml
 - **大小**: 7.7 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/Official_Examples/Metacubex/rule-set_config.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Official_Examples/Metacubex/rule-set_config.yaml)
 
 #### 📶 网络端口配置 (Ports)
 | 类型 | 端口/地址 | 说明 |
@@ -119,5 +119,5 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `geox_config.yaml` | 5.2 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/Official_Examples/Metacubex/geox_config.yaml) |
-| `rule-set_config.yaml` | 7.7 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/Official_Examples/Metacubex/rule-set_config.yaml) |
+| `geox_config.yaml` | 5.2 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Official_Examples/Metacubex/geox_config.yaml) |
+| `rule-set_config.yaml` | 7.7 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Official_Examples/Metacubex/rule-set_config.yaml) |

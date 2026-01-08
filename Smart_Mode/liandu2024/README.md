@@ -21,7 +21,7 @@
 
 ### 📝 clash-all-fallback-smart.yaml
 - **大小**: 19.9 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/Smart_Mode/liandu2024/clash-all-fallback-smart.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/liandu2024/clash-all-fallback-smart.yaml)
 
 #### 📶 网络端口配置 (Ports)
 | 类型 | 端口/地址 | 说明 |
@@ -72,7 +72,7 @@
 
 ### 📝 clash-all-smart.yaml
 - **大小**: 16.7 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/Smart_Mode/liandu2024/clash-all-smart.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/liandu2024/clash-all-smart.yaml)
 
 #### 📶 网络端口配置 (Ports)
 | 类型 | 端口/地址 | 说明 |
@@ -123,7 +123,7 @@
 
 ### 📝 clash-fallback-smart-std.yaml
 - **大小**: 19.4 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/Smart_Mode/liandu2024/clash-fallback-smart-std.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/liandu2024/clash-fallback-smart-std.yaml)
 
 #### 📶 网络端口配置 (Ports)
 | 类型 | 端口/地址 | 说明 |
@@ -176,6 +176,6 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `clash-all-fallback-smart.yaml` | 19.9 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/Smart_Mode/liandu2024/clash-all-fallback-smart.yaml) |
-| `clash-all-smart.yaml` | 16.7 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/Smart_Mode/liandu2024/clash-all-smart.yaml) |
-| `clash-fallback-smart-std.yaml` | 19.4 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/Smart_Mode/liandu2024/clash-fallback-smart-std.yaml) |
+| `clash-all-fallback-smart.yaml` | 19.9 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/liandu2024/clash-all-fallback-smart.yaml) |
+| `clash-all-smart.yaml` | 16.7 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/liandu2024/clash-all-smart.yaml) |
+| `clash-fallback-smart-std.yaml` | 19.4 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/liandu2024/clash-fallback-smart-std.yaml) |

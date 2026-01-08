@@ -8,7 +8,7 @@
 
 ### 📝 ConfigForClash.yaml
 - **大小**: 49.3 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/fufu/ConfigForClash.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/fufu/ConfigForClash.yaml)
 
 #### 📶 网络端口配置 (Ports)
 | 类型 | 端口/地址 | 说明 |
@@ -62,4 +62,4 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `ConfigForClash.yaml` | 49.3 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/fufu/ConfigForClash.yaml) |
+| `ConfigForClash.yaml` | 49.3 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/fufu/ConfigForClash.yaml) |

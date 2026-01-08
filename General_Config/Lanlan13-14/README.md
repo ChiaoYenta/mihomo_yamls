@@ -21,7 +21,7 @@
 
 ### 📝 configfull.yaml
 - **大小**: 33.9 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull.yaml)
 
 #### 📶 网络端口配置 (Ports)
 | 类型 | 端口/地址 | 说明 |
@@ -69,7 +69,7 @@
 
 ### 📝 configfull_NoAd.yaml
 - **大小**: 33.4 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull_NoAd.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull_NoAd.yaml)
 
 #### 📶 网络端口配置 (Ports)
 | 类型 | 端口/地址 | 说明 |
@@ -117,7 +117,7 @@
 
 ### 📝 configfull_lite.yaml
 - **大小**: 17.4 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull_lite.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull_lite.yaml)
 
 #### 📶 网络端口配置 (Ports)
 | 类型 | 端口/地址 | 说明 |
@@ -167,6 +167,6 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `configfull.yaml` | 33.9 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull.yaml) |
-| `configfull_NoAd.yaml` | 33.4 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull_NoAd.yaml) |
-| `configfull_lite.yaml` | 17.4 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull_lite.yaml) |
+| `configfull.yaml` | 33.9 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull.yaml) |
+| `configfull_NoAd.yaml` | 33.4 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull_NoAd.yaml) |
+| `configfull_lite.yaml` | 17.4 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull_lite.yaml) |

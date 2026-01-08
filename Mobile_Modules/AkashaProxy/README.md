@@ -21,7 +21,7 @@
 
 ### 📝 akasha_config.yaml
 - **大小**: 8.2 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/Mobile_Modules/AkashaProxy/akasha_config.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Mobile_Modules/AkashaProxy/akasha_config.yaml)
 
 #### 📶 网络端口配置 (Ports)
 | 类型 | 端口/地址 | 说明 |
@@ -71,7 +71,7 @@
 
 ### 📝 config.yaml
 - **大小**: 14 B
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/Mobile_Modules/AkashaProxy/config.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Mobile_Modules/AkashaProxy/config.yaml)
 
 ---
 
@@ -79,5 +79,5 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `akasha_config.yaml` | 8.2 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/Mobile_Modules/AkashaProxy/akasha_config.yaml) |
-| `config.yaml` | 14 B | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/Mobile_Modules/AkashaProxy/config.yaml) |
+| `akasha_config.yaml` | 8.2 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Mobile_Modules/AkashaProxy/akasha_config.yaml) |
+| `config.yaml` | 14 B | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Mobile_Modules/AkashaProxy/config.yaml) |
