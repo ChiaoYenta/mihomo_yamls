@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🐱 𝕄𝕀ℍ𝕆𝕄𝕆 的千种配
+# 🐱 𝕄𝕀ℍ𝕆𝕄𝕆 的千种配置
 
 **Mihomo / Clash Meta 核心专用配置精选合集**
 
