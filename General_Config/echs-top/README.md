@@ -7,7 +7,7 @@
 ## 📄 配置文件详解 (Details)
 
 ### 📝 mihomo.yaml
-- **大小**: 17.4 KB
+- **大小**: 17.8 KB
 - **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/echs-top/mihomo.yaml)
 
 #### 📶 网络端口配置 (Ports)
@@ -22,19 +22,19 @@
 | 策略组 (Group) | 类型 (Type) |
 | :--- | :--- |
 | 👆 PROXY | `select` |
+| 👆 LOCAL | `select` |
 | 👆 PROXYDNS | `select` |
 | 👆 WebRTC | `select` |
 | 👆 FCM | `select` |
 | 👆 BOTTEST | `select` |
 | 👆 BILIBILI | `select` |
+| 👆 AI | `select` |
 | 👆 TELEGRAM | `select` |
 | 👆 META | `select` |
 | 👆 TWITTER | `select` |
 | 👆 TIKTOK | `select` |
 | 👆 NETFLIX | `select` |
 | 👆 SPOTIFY | `select` |
-| 👆 AI | `select` |
-| 👆 GITHUB | `select` |
 | 👆 GOOGLE | `select` |
 | ... | 还有 14 个 |
 
@@ -57,4 +57,4 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `mihomo.yaml` | 17.4 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/echs-top/mihomo.yaml) |
+| `mihomo.yaml` | 17.8 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/echs-top/mihomo.yaml) |

@@ -7,7 +7,7 @@
 ## 📄 配置文件详解 (Details)
 
 ### 📝 mihomo_smart.yaml
-- **大小**: 17.8 KB
+- **大小**: 18.5 KB
 - **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/echs-top/mihomo_smart.yaml)
 
 #### 📶 网络端口配置 (Ports)
@@ -22,19 +22,19 @@
 | 策略组 (Group) | 类型 (Type) |
 | :--- | :--- |
 | 👆 PROXY | `select` |
+| 👆 LOCAL | `select` |
 | 👆 PROXYDNS | `select` |
 | 👆 WebRTC | `select` |
 | 👆 FCM | `select` |
 | 👆 BOTTEST | `select` |
 | 👆 BILIBILI | `select` |
+| 👆 AI | `select` |
 | 👆 TELEGRAM | `select` |
 | 👆 META | `select` |
 | 👆 TWITTER | `select` |
 | 👆 TIKTOK | `select` |
 | 👆 NETFLIX | `select` |
 | 👆 SPOTIFY | `select` |
-| 👆 AI | `select` |
-| 👆 GITHUB | `select` |
 | 👆 GOOGLE | `select` |
 | ... | 还有 14 个 |
 
@@ -57,4 +57,4 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `mihomo_smart.yaml` | 17.8 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/echs-top/mihomo_smart.yaml) |
+| `mihomo_smart.yaml` | 18.5 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/echs-top/mihomo_smart.yaml) |

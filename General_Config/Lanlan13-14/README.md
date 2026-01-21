@@ -8,7 +8,7 @@
 
 | 特性 / 文件 | `configfull.yaml` | `configfull_NoAd.yaml` | `configfull_lite.yaml` |
 | :--- | :--- | :--- | :--- |
-| **文件大小** | 33.9 KB | 33.4 KB | 17.5 KB |
+| **文件大小** | 33.9 KB | 33.5 KB | 17.5 KB |
 | **混合端口** | 7890 | 7890 | 7890 |
 | **控制面板** | 0.0.0.0:9090 | 0.0.0.0:9090 | 0.0.0.0:9090 |
 | **运行模式** | Rule | Rule | Rule |
@@ -68,7 +68,7 @@
 ---
 
 ### 📝 configfull_NoAd.yaml
-- **大小**: 33.4 KB
+- **大小**: 33.5 KB
 - **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull_NoAd.yaml)
 
 #### 📶 网络端口配置 (Ports)
@@ -168,5 +168,5 @@
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
 | `configfull.yaml` | 33.9 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull.yaml) |
-| `configfull_NoAd.yaml` | 33.4 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull_NoAd.yaml) |
+| `configfull_NoAd.yaml` | 33.5 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull_NoAd.yaml) |
 | `configfull_lite.yaml` | 17.5 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/Lanlan13-14/configfull_lite.yaml) |
