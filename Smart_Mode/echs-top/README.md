@@ -7,7 +7,7 @@
 ## 📄 配置文件详解 (Details)
 
 ### 📝 mihomo_smart.yaml
-- **大小**: 18.0 KB
+- **大小**: 18.3 KB
 - **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/echs-top/mihomo_smart.yaml)
 
 #### 📶 网络端口配置 (Ports)
@@ -46,7 +46,7 @@
 | 类型 | 服务器 |
 | :--- | :--- |
 | DoH | `https://8.8.8.8/dns-query#PROXYDNS` |
-| DoH | `https://1.1.1.1/dns-query#PROXYDNS` |
+| DoH | `https://9.9.9.9/dns-query#PROXYDNS` |
 
 </details>
 
@@ -57,4 +57,4 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `mihomo_smart.yaml` | 18.0 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/echs-top/mihomo_smart.yaml) |
+| `mihomo_smart.yaml` | 18.3 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/Smart_Mode/echs-top/mihomo_smart.yaml) |
