@@ -21,7 +21,9 @@ permissions:
   contents: write
 
 jobs:
-  # 第一阶段: 下载所有配置
+  # ==================================================
+  # 第一阶段: 并行下载所有配置
+  # ==================================================
   download-configs:
     runs-on: ubuntu-latest
     strategy:
@@ -34,16 +36,10 @@ jobs:
       fail-fast: false
       max-parallel: 4
     
-    # ❌ 删除这里的 if，因为 matrix 变量在此处不可用
-    
     steps:
       - name: 检查存储库
-        # 🔧 修正: v6 不存在，改为 v4
-        uses: actions/checkout@v4 
-        with:
-          ref: ${{ github.ref }}
+        uses: actions/checkout@v4  # 🔧 修正: v6 不存在，改为 v4
 
-      # 💡 在这里添加判断逻辑
       - name: 判断是否需要执行
         id: check_run
         run: |
@@ -54,202 +50,137 @@ jobs:
              should_run=true
           fi
           echo "should_run=$should_run" >> $GITHUB_OUTPUT
-          echo "Run status: $should_run"
 
       - name: 下载配置文件
-        id: download
-        # ✅ 仅当满足条件时运行
         if: steps.check_run.outputs.should_run == 'true'
+        id: download
         run: |
+          # 根据类别设置下载路径
           case "${{ matrix.category }}" in
             official)
+              target_dir="Official_Examples"
               echo "📥 下载官方示例配置..."
-              mkdir -p "Official_Examples/Metacubex"
-              curl -s -o "Official_Examples/Metacubex/rule-set_config.yaml" \
-                "https://wiki.metacubex.one/example/mrs"
-              curl -s -o "Official_Examples/Metacubex/geox_config.yaml" \
-                "https://wiki.metacubex.one/example/geox"
-              artifact_path="Official_Examples"
+              mkdir -p "$target_dir/Metacubex"
+              curl -s -o "$target_dir/Metacubex/rule-set_config.yaml" "https://wiki.metacubex.one/example/mrs"
+              curl -s -o "$target_dir/Metacubex/geox_config.yaml" "https://wiki.metacubex.one/example/geox"
               ;;
             
             general)
+              target_dir="General_Config"
               echo "📥 下载通用配置..."
-              # 确保脚本存在且可执行，这里假设你的仓库里有这些脚本
+              # 只要确保 bash 脚本里有 mkdir -p General_Config/... 即可
+              # 为了保险，这里可以先创建
+              mkdir -p "$target_dir"
               if [ -f .github/scripts/download-general.sh ]; then
                 bash .github/scripts/download-general.sh
-              else 
-                mkdir -p General_Config # 防止报错
+              else
+                # 如果没有脚本，演示用代码(请替换为实际逻辑或保留你的脚本)
+                echo "⚠️ 脚本未找到，仅创建目录示例"
               fi
-              artifact_path="General_Config"
               ;;
             
             smart)
+              target_dir="Smart_Mode"
               echo "📥 下载Smart模式配置..."
-              if [ -f .github/scripts/download-smart.sh ]; then
-                bash .github/scripts/download-smart.sh
-              else
-                 mkdir -p Smart_Mode
-              fi
-              artifact_path="Smart_Mode"
+              mkdir -p "$target_dir"
+              if [ -f .github/scripts/download-smart.sh ]; then bash .github/scripts/download-smart.sh; fi
               ;;
             
             mobile)
+              target_dir="Mobile_Modules"
               echo "📥 下载移动模块配置..."
-              if [ -f .github/scripts/download-mobile.sh ]; then
-                bash .github/scripts/download-mobile.sh
-              else
-                 mkdir -p Mobile_Modules
-              fi
-              artifact_path="Mobile_Modules"
+              mkdir -p "$target_dir"
+              if [ -f .github/scripts/download-mobile.sh ]; then bash .github/scripts/download-mobile.sh; fi
               ;;
           esac
           
-          echo "artifact_path=$artifact_path" >> $GITHUB_OUTPUT
+          # 输出给下一步
+          echo "artifact_path=$target_dir" >> $GITHUB_OUTPUT
 
-      - name: 验证下载结果
-        # ✅ 仅当满足条件时运行
-        if: steps.check_run.outputs.should_run == 'true'
-        run: |
-          echo "🔍 验证 ${{ matrix.category }} 配置..."
-          
-          total=0
-          success=0
-          failed=0
-          
-          case "${{ matrix.category }}" in
-            official) dir="Official_Examples" ;;
-            general) dir="General_Config" ;;
-            smart) dir="Smart_Mode" ;;
-            mobile) dir="Mobile_Modules" ;;
-          esac
-          
-          if [ -d "$dir" ]; then
-            while IFS= read -r -d '' file; do
-              total=$((total + 1))
-              size=$(wc -c < "$file")
-              
-              if [ $size -gt 100 ]; then
-                success=$((success + 1))
-                echo "✅ ${file}: ${size} bytes"
-              else
-                failed=$((failed + 1))
-                echo "❌ ${file}: ${size} bytes (too small)"
-              fi
-            done < <(find "$dir" -type f -name "*.yaml" -print0)
-          fi
-          
-          echo ""
-          echo "📊 统计结果:"
-          echo "  总计: $total 个文件"
-          echo "  成功: $success 个文件"
-          echo "  失败: $failed 个文件"
-          
-          if [ $total -gt 0 ] && [ $((failed * 2)) -gt $total ]; then
-            echo "⚠️  警告: 失败率过高!"
-          fi
-
+      # 上传时，Artifact 会剥离 artifact_path 这一层文件夹
+      # 例如：上传 General_Config，下载时只会得到里面的内容，General_Config 文件夹本身不包含在内
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
-        # ✅ 仅当满足条件且上一步成功时运行
         if: steps.check_run.outputs.should_run == 'true'
         with:
           name: configs-${{ matrix.category }}
           path: ${{ steps.download.outputs.artifact_path }}
           retention-days: 1
-          if-no-files-found: ignore # 防止空文件夹报错
+          if-no-files-found: ignore
 
-  # 第二阶段: 合并所有配置并提交
+  # ==================================================
+  # 第二阶段: 合并所有配置 (关键修复步骤)
+  # ==================================================
   commit-changes:
     needs: download-configs
     runs-on: ubuntu-latest
-    if: always() 
+    if: always()
     
     steps:
       - name: 检查存储库
-        uses: actions/checkout@v4 # 🔧 修正为 v4
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
-          fetch-depth: 0 
 
-      - name: 下载所有 artifacts
+      # 🔧 [关键修复]：显式指定每个 artifact 下载到哪个文件夹
+      # 这样可以重建目录结构，而不是全部散落在根目录
+      
+      - name: 下载 Official 配置
         uses: actions/download-artifact@v4
+        continue-on-error: true # 防止并未运行此分类时报错
         with:
-          path: downloaded-configs
-          pattern: configs-* # 只下载匹配的 artifact
-          merge-multiple: true # v4 新特性，自动合并同名目录(如果有)
+          name: configs-official
+          path: Official_Examples  # 👈 强制放回 Official_Examples 文件夹
 
-      - name: 合并配置文件
-        run: |
-          echo "📦 合并配置文件..."
-          
-          # 检查是否有下载到文件
-          if [ -d "downloaded-configs" ]; then
-             # 因为使用了 merge-multiple: true 或默认行为，v4可能会直接把文件解压到 path
-             # 下面的逻辑适配 v4 的目录结构
-             
-             # 如果 artifact 带着目录结构上传，这里直接复制即可
-             cp -r downloaded-configs/* . 2>/dev/null || true
-             
-             # 如果 v4 下载后每个 artifact 是一个子文件夹 (默认行为)
-             # configs-official/Official_Examples/...
-             for dir in downloaded-configs/*; do
-               if [ -d "$dir" ]; then
-                 echo "Processing $dir..."
-                 cp -r "$dir"/* . 2>/dev/null || true
-               fi
-             done
-          else
-             echo "⚠️ 没有下载到任何配置 (可能是因为只选择了特定类别且未生成 artifact)"
-          fi
-          
-          # 清理
-          rm -rf downloaded-configs
+      - name: 下载 General 配置
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: configs-general
+          path: General_Config     # 👈 强制放回 General_Config 文件夹
 
-      - name: 生成更新报告
-        id: report
+      - name: 下载 Smart 配置
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: configs-smart
+          path: Smart_Mode         # 👈 强制放回 Smart_Mode 文件夹
+
+      - name: 下载 Mobile 配置
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: configs-mobile
+          path: Mobile_Modules     # 👈 强制放回 Mobile_Modules 文件夹
+
+      - name: 生成报告并提交
         run: |
+          echo "📝 检查目录结构..."
+          ls -R
+          
           echo "📝 生成更新报告..."
+          report="## 配置更新报告 - $(date +'%Y-%m-%d %H:%M:%S')\n"
           
-          report="## 配置更新报告 - $(date +'%Y-%m-%d %H:%M:%S')"
-          report="${report}\n"
-          
+          # 遍历统计
           for dir in Official_Examples General_Config Smart_Mode Mobile_Modules; do
             if [ -d "$dir" ]; then
               count=$(find "$dir" -type f -name "*.yaml" | wc -l)
-              size=$(du -sh "$dir" 2>/dev/null | cut -f1)
-              report="${report}\n### ${dir}"
-              report="${report}\n- 文件数量: ${count}"
-              report="${report}\n- 总大小: ${size}\n"
+              report="${report}\n### ${dir}\n- 文件数量: ${count}\n"
             fi
           done
           
-          echo -e "$report"
           echo -e "$report" > UPDATE_REPORT.md
-
-      - name: 检查是否有更改
-        id: check
-        run: |
-          git diff --quiet || echo "has_changes=true" >> $GITHUB_OUTPUT
-
-      - name: 提交并推送更改
-        if: steps.check.outputs.has_changes == 'true'
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          git add .
-          
-          echo "🔄 自动更新配置文件 [$(date +'%Y-%m-%d %H:%M:%S')]" > commit_msg.txt
-          echo "" >> commit_msg.txt
-          cat UPDATE_REPORT.md >> commit_msg.txt
-          
-          git commit -F commit_msg.txt
-          git push origin HEAD:${{ github.ref_name }}
-          
-          echo "✅ 更改已成功推送"
-
-      - name: 清理旧的 artifacts
-        if: always()
-        uses: geekyeggo/delete-artifact@v2
-        with:
-          name: configs-*
+          # 检查是否有 Git 变更
+          if git diff --quiet; then
+            echo "✅ 没有检测到文件变更"
+          else
+            echo "🔄 检测到变更，准备提交..."
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            
+            git add .
+            git commit -m "🔄 自动更新配置 [$(date +'%Y-%m-%d')]" -m "$(cat UPDATE_REPORT.md)"
+            git push origin HEAD:${{ github.ref_name }}
+            echo "✅ 推送成功"
+          fi
