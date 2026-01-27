@@ -1,4 +1,4 @@
-name: Download YAML Files
+name: Update Configs
 
 on:
   schedule:
@@ -169,25 +169,22 @@ jobs:
         run: |
           echo "📝 生成更新报告..."
           
-          report="## 配置更新报告 - $(date +'%Y-%m-%d %H:%M:%S')
-
-"
+          report="## 配置更新报告 - $(date +'%Y-%m-%d %H:%M:%S')"
+          report="${report}\n"
           
           # 统计各类别文件数
           for dir in Official_Examples General_Config Smart_Mode Mobile_Modules; do
             if [ -d "$dir" ]; then
               count=$(find "$dir" -type f -name "*.yaml" | wc -l)
               size=$(du -sh "$dir" 2>/dev/null | cut -f1)
-              report="${report}
-### ${dir}
-- 文件数量: ${count}
-- 总大小: ${size}
-"
+              report="${report}\n### ${dir}"
+              report="${report}\n- 文件数量: ${count}"
+              report="${report}\n- 总大小: ${size}\n"
             fi
           done
           
-          echo "$report"
-          echo "$report" > UPDATE_REPORT.md
+          echo -e "$report"
+          echo -e "$report" > UPDATE_REPORT.md
 
       - name: 检查是否有更改
         id: check
@@ -202,12 +199,12 @@ jobs:
           
           git add .
           
-          # 创建详细的提交信息
-          commit_msg="🔄 自动更新配置文件 [$(date +'%Y-%m-%d %H:%M:%S')]
-
-$(cat UPDATE_REPORT.md)"
+          # 创建提交信息
+          echo "🔄 自动更新配置文件 [$(date +'%Y-%m-%d %H:%M:%S')]" > commit_msg.txt
+          echo "" >> commit_msg.txt
+          cat UPDATE_REPORT.md >> commit_msg.txt
           
-          git commit -m "$commit_msg"
+          git commit -F commit_msg.txt
           git push origin HEAD:${{ github.ref_name }}
           
           echo "✅ 更改已成功推送"
