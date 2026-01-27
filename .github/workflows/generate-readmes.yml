@@ -3,7 +3,7 @@ name: Generate Sub-READMEs
 on:
   workflow_dispatch: # 允许手动触发
   workflow_run:      # 当更新文件的那个工作流完成后自动运行
-    workflows: ["Update File Test"]
+    workflows: ["Update Configs"]
     types:
       - completed
 
