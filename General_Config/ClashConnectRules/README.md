@@ -8,7 +8,7 @@
 
 ### 📝 Clash.yaml
 - **大小**: 27.3 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/ClashConnectRules/Clash.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/ClashConnectRules/Clash.yaml)
 
 #### 📶 网络端口配置 (Ports)
 | 类型 | 端口/地址 | 说明 |
@@ -60,4 +60,4 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `Clash.yaml` | 27.3 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/ClashConnectRules/Clash.yaml) |
+| `Clash.yaml` | 27.3 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/ClashConnectRules/Clash.yaml) |

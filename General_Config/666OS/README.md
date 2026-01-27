@@ -21,7 +21,7 @@
 
 ### 📝 MihomoPro_Config.yaml
 - **大小**: 22.6 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/666OS/MihomoPro_Config.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/666OS/MihomoPro_Config.yaml)
 
 #### 📶 网络端口配置 (Ports)
 | 类型 | 端口/地址 | 说明 |
@@ -73,7 +73,7 @@
 
 ### 📝 OneTouch_Config.yaml
 - **大小**: 12.4 KB
-- **链接**: [查看源码](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/666OS/OneTouch_Config.yaml)
+- **链接**: [查看源码](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/666OS/OneTouch_Config.yaml)
 
 #### 📶 网络端口配置 (Ports)
 | 类型 | 端口/地址 | 说明 |
@@ -126,5 +126,5 @@
 
 | 文件名 | 大小 | 链接 |
 | :--- | :--- | :--- |
-| `MihomoPro_Config.yaml` | 22.6 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/666OS/MihomoPro_Config.yaml) |
-| `OneTouch_Config.yaml` | 12.4 KB | [查看](https://github.com/HenryChiao/mihomo_yamls/blob/main/General_Config/666OS/OneTouch_Config.yaml) |
+| `MihomoPro_Config.yaml` | 22.6 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/666OS/MihomoPro_Config.yaml) |
+| `OneTouch_Config.yaml` | 12.4 KB | [查看](https://github.com/MARSCHIAO/mihomo_yamls/blob/main/General_Config/666OS/OneTouch_Config.yaml) |
