@@ -71,8 +71,8 @@ jobs:
               # 只要确保 bash 脚本里有 mkdir -p General_Config/... 即可
               # 为了保险，这里可以先创建
               mkdir -p "$target_dir"
-              if [ -f .github/scripts/download-general.sh ]; then
-                bash .github/scripts/download-general.sh
+              if [ -f scripts/download-general.sh ]; then
+                bash scripts/download-general.sh
               else
                 # 如果没有脚本，演示用代码(请替换为实际逻辑或保留你的脚本)
                 echo "⚠️ 脚本未找到，仅创建目录示例"
@@ -83,14 +83,14 @@ jobs:
               target_dir="Smart_Mode"
               echo "📥 下载Smart模式配置..."
               mkdir -p "$target_dir"
-              if [ -f .github/scripts/download-smart.sh ]; then bash .github/scripts/download-smart.sh; fi
+              if [ -f scripts/download-smart.sh ]; then bash scripts/download-smart.sh; fi
               ;;
             
             mobile)
               target_dir="Mobile_Modules"
               echo "📥 下载移动模块配置..."
               mkdir -p "$target_dir"
-              if [ -f .github/scripts/download-mobile.sh ]; then bash .github/scripts/download-mobile.sh; fi
+              if [ -f scripts/download-mobile.sh ]; then bash scripts/download-mobile.sh; fi
               ;;
           esac
           
