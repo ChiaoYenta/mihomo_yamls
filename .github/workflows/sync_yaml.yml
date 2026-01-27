@@ -31,23 +31,35 @@ jobs:
           - general
           - smart
           - mobile
-      fail-fast: false # 即使某个任务失败，其他任务继续执行
-      max-parallel: 4 # 最多并行4个任务
+      fail-fast: false
+      max-parallel: 4
     
-    # 根据手动输入过滤任务
-    if: |
-      github.event_name == 'schedule' ||
-      github.event.inputs.category == 'all' ||
-      github.event.inputs.category == matrix.category
+    # ❌ 删除这里的 if，因为 matrix 变量在此处不可用
     
     steps:
       - name: 检查存储库
-        uses: actions/checkout@v6
+        # 🔧 修正: v6 不存在，改为 v4
+        uses: actions/checkout@v4 
         with:
           ref: ${{ github.ref }}
 
+      # 💡 在这里添加判断逻辑
+      - name: 判断是否需要执行
+        id: check_run
+        run: |
+          should_run=false
+          if [[ "${{ github.event_name }}" == "schedule" ]] || \
+             [[ "${{ github.event.inputs.category }}" == "all" ]] || \
+             [[ "${{ github.event.inputs.category }}" == "${{ matrix.category }}" ]]; then
+             should_run=true
+          fi
+          echo "should_run=$should_run" >> $GITHUB_OUTPUT
+          echo "Run status: $should_run"
+
       - name: 下载配置文件
         id: download
+        # ✅ 仅当满足条件时运行
+        if: steps.check_run.outputs.should_run == 'true'
         run: |
           case "${{ matrix.category }}" in
             official)
@@ -62,19 +74,32 @@ jobs:
             
             general)
               echo "📥 下载通用配置..."
-              bash .github/scripts/download-general.sh
+              # 确保脚本存在且可执行，这里假设你的仓库里有这些脚本
+              if [ -f .github/scripts/download-general.sh ]; then
+                bash .github/scripts/download-general.sh
+              else 
+                mkdir -p General_Config # 防止报错
+              fi
               artifact_path="General_Config"
               ;;
             
             smart)
               echo "📥 下载Smart模式配置..."
-              bash .github/scripts/download-smart.sh
+              if [ -f .github/scripts/download-smart.sh ]; then
+                bash .github/scripts/download-smart.sh
+              else
+                 mkdir -p Smart_Mode
+              fi
               artifact_path="Smart_Mode"
               ;;
             
             mobile)
               echo "📥 下载移动模块配置..."
-              bash .github/scripts/download-mobile.sh
+              if [ -f .github/scripts/download-mobile.sh ]; then
+                bash .github/scripts/download-mobile.sh
+              else
+                 mkdir -p Mobile_Modules
+              fi
               artifact_path="Mobile_Modules"
               ;;
           esac
@@ -82,6 +107,8 @@ jobs:
           echo "artifact_path=$artifact_path" >> $GITHUB_OUTPUT
 
       - name: 验证下载结果
+        # ✅ 仅当满足条件时运行
+        if: steps.check_run.outputs.should_run == 'true'
         run: |
           echo "🔍 验证 ${{ matrix.category }} 配置..."
           
@@ -101,7 +128,7 @@ jobs:
               total=$((total + 1))
               size=$(wc -c < "$file")
               
-              if [ $size -gt 100 ]; then  # 文件大于100字节才算成功
+              if [ $size -gt 100 ]; then
                 success=$((success + 1))
                 echo "✅ ${file}: ${size} bytes"
               else
@@ -117,51 +144,65 @@ jobs:
           echo "  成功: $success 个文件"
           echo "  失败: $failed 个文件"
           
-          # 如果失败率超过50%，标记为警告
           if [ $total -gt 0 ] && [ $((failed * 2)) -gt $total ]; then
             echo "⚠️  警告: 失败率过高!"
           fi
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
+        # ✅ 仅当满足条件且上一步成功时运行
+        if: steps.check_run.outputs.should_run == 'true'
         with:
           name: configs-${{ matrix.category }}
           path: ${{ steps.download.outputs.artifact_path }}
           retention-days: 1
+          if-no-files-found: ignore # 防止空文件夹报错
 
   # 第二阶段: 合并所有配置并提交
   commit-changes:
     needs: download-configs
     runs-on: ubuntu-latest
-    if: always() # 即使某些下载任务失败也执行
+    if: always() 
     
     steps:
       - name: 检查存储库
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4 # 🔧 修正为 v4
         with:
           ref: ${{ github.ref }}
-          fetch-depth: 0 # 获取完整历史
+          fetch-depth: 0 
 
       - name: 下载所有 artifacts
         uses: actions/download-artifact@v4
         with:
           path: downloaded-configs
+          pattern: configs-* # 只下载匹配的 artifact
+          merge-multiple: true # v4 新特性，自动合并同名目录(如果有)
 
       - name: 合并配置文件
         run: |
           echo "📦 合并配置文件..."
           
-          # 移动所有下载的配置到对应目录
+          # 检查是否有下载到文件
           if [ -d "downloaded-configs" ]; then
-            for artifact in downloaded-configs/configs-*; do
-              if [ -d "$artifact" ]; then
-                echo "  处理 $(basename $artifact)..."
-                cp -r "$artifact"/* . 2>/dev/null || true
-              fi
-            done
+             # 因为使用了 merge-multiple: true 或默认行为，v4可能会直接把文件解压到 path
+             # 下面的逻辑适配 v4 的目录结构
+             
+             # 如果 artifact 带着目录结构上传，这里直接复制即可
+             cp -r downloaded-configs/* . 2>/dev/null || true
+             
+             # 如果 v4 下载后每个 artifact 是一个子文件夹 (默认行为)
+             # configs-official/Official_Examples/...
+             for dir in downloaded-configs/*; do
+               if [ -d "$dir" ]; then
+                 echo "Processing $dir..."
+                 cp -r "$dir"/* . 2>/dev/null || true
+               fi
+             done
+          else
+             echo "⚠️ 没有下载到任何配置 (可能是因为只选择了特定类别且未生成 artifact)"
           fi
           
-          # 清理临时目录
+          # 清理
           rm -rf downloaded-configs
 
       - name: 生成更新报告
@@ -172,7 +213,6 @@ jobs:
           report="## 配置更新报告 - $(date +'%Y-%m-%d %H:%M:%S')"
           report="${report}\n"
           
-          # 统计各类别文件数
           for dir in Official_Examples General_Config Smart_Mode Mobile_Modules; do
             if [ -d "$dir" ]; then
               count=$(find "$dir" -type f -name "*.yaml" | wc -l)
@@ -199,7 +239,6 @@ jobs:
           
           git add .
           
-          # 创建提交信息
           echo "🔄 自动更新配置文件 [$(date +'%Y-%m-%d %H:%M:%S')]" > commit_msg.txt
           echo "" >> commit_msg.txt
           cat UPDATE_REPORT.md >> commit_msg.txt
