@@ -1,6 +1,6 @@
-# 地址: https://github.com/wanswu/my-backup
+# 地址: https://github.com/Wans-OS/my-backup
 # 作者: Wans
-# 更新: 2026-01-21 12:23:07
+# 更新: 2026-03-01 16:18:25
 # 描述: 在proxy-providers加入您的机场订阅链接 (代理提供者)
 
 # 订阅锚点，排除了一些节点，例如 包含剩余, 官网, 到期, 也可以在exclude-filter添加你需要排除的节点
@@ -56,7 +56,7 @@ dns:
     - rule-set:China
   default-nameserver:
     - tls://223.5.5.5
-    - tls://119.29.29.29
+    - tls://223.6.6.6
   nameserver:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
@@ -105,27 +105,27 @@ sniffer:
 
 # 实验性功能
 experimental:
-  quic-go-disable-gso: true  
+  quic-go-disable-gso: true
 
 # 面板设置
 external-ui-name: zashboard
 external-ui: ui
 external-ui-url: https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip
-secret: "Wans"
+# secret: "Wans"
 external-controller: '127.0.0.1:9090'
 
 # 代理组锚点 hidden: true 是为了隐藏地区分组，有需要显示出来的佬友可以删除
-BaseUT: &BaseUT { type: url-test, interval: 200, lazy: true, url: 'https://www.google.com/generate_204', hidden: true, include-all: true }
-BaseFB: &BaseFB { type: fallback, interval: 200, lazy: true, url: 'https://www.google.com/generate_204', hidden: true, include-all: true }
-BaseCR: &BaseCR { type: load-balance, interval: 200, lazy: true, url: 'https://www.google.com/generate_204', hidden: true, strategy: round-robin, include-all: true }
-BaseCH: &BaseCH { type: load-balance, interval: 200, lazy: true, url: 'https://www.google.com/generate_204', hidden: true, strategy: consistent-hashing, include-all: true }
+BaseUT: &BaseUT { type: url-test, interval: 300, lazy: true, url: 'https://www.gstatic.com/generate_204', hidden: true, include-all: true }
+BaseFB: &BaseFB { type: fallback, interval: 300, lazy: true, url: 'https://www.gstatic.com/generate_204', hidden: true, include-all: true }
+BaseCR: &BaseCR { type: load-balance, interval: 300, lazy: true, url: 'https://www.gstatic.com/generate_204', hidden: true, strategy: round-robin, include-all: true }
+BaseCH: &BaseCH { type: load-balance, interval: 300, lazy: true, url: 'http://www.gstatic.com/generate_204', hidden: true, strategy: consistent-hashing, include-all: true }
 
 # 代理组锚点
 SelectUL: &SelectUL { type: select, proxies: [ 香港, 台湾, 澳门, 狮城, 日本, 韩国, 美国, 英国, 德国, 法国, 印度, 越南, 印尼, 泰国, 澳洲, 巴西, 荷兰, 土耳其, 阿根廷, 冷门节点, DIRECT, REJECT ], include-all: true }
 SelectTW: &SelectTW { type: select, proxies: [ 台湾, 香港, 澳门, 狮城, 日本, 韩国, 美国, 英国, 德国, 法国, 印度, 越南, 印尼, 泰国, 澳洲, 巴西, 荷兰, 土耳其, 阿根廷, 冷门节点, DIRECT, REJECT, 手动选择 ] }
 SelectUS: &SelectUS { type: select, proxies: [ 美国, 香港, 台湾, 澳门, 狮城, 日本, 韩国, 英国, 德国, 法国, 印度, 越南, 印尼, 泰国, 澳洲, 巴西, 荷兰, 土耳其, 阿根廷, 冷门节点, DIRECT, REJECT, 手动选择 ] }
+SelectSG: &SelectSG { type: select, proxies: [ 狮城, 美国, 香港, 台湾, 澳门, 日本, 韩国, 英国, 德国, 法国, 印度, 越南, 印尼, 泰国, 澳洲, 巴西, 荷兰, 土耳其, 阿根廷, 冷门节点, DIRECT, REJECT, 手动选择 ] }
 SelectSL: &SelectSL { type: select, proxies: [ 手动选择, 香港, 台湾, 澳门, 狮城, 日本, 韩国, 美国, 英国, 德国, 法国, 印度, 越南, 印尼, 泰国, 澳洲, 巴西, 荷兰, 土耳其, 阿根廷, 冷门节点, DIRECT, REJECT ] }
-SelectDR: &SelectDR { type: select, proxies: [ DIRECT, REJECT ], hidden: true }
 SelectCS: &SelectCS { type: select, lazy: true, include-all: true, hidden: true }
 
 # 节点筛选锚点
@@ -162,14 +162,14 @@ FilterAR: &FilterAR "(?i)(?=.*(🇦🇷|阿根廷|ARG|argentina))"
 # 代理组
 proxy-groups:
   - { name: 手动选择,     <<: *SelectUL, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Rocket.png }
-  - { name: 直接连接,     <<: *SelectDR, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Direct.png }
 
   # ===================== AI大模型 =====================
   - { name: Claude,     <<: *SelectSL, icon: https://fastly.jsdelivr.net/gh/lobehub/lobe-icons@master/packages/static-png/light/claude-color.png }
-  - { name: Gemini,     <<: *SelectTW, icon: https://fastly.jsdelivr.net/gh/lobehub/lobe-icons@master/packages/static-png/light/gemini-color.png }
+  - { name: Gemini,     <<: *SelectSG, icon: https://fastly.jsdelivr.net/gh/lobehub/lobe-icons@master/packages/static-png/light/gemini-color.png }
   - { name: OpenAI,     <<: *SelectUS, icon: https://fastly.jsdelivr.net/gh/lobehub/lobe-icons@master/packages/static-png/light/openai.png }
 
   # ===================== 媒体 & 娱乐 =====================
+  - { name: Apple,      <<: *SelectSL, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Apple.png }
   - { name: Disney,     <<: *SelectSL, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Disney.png }
   - { name: Netflix,    <<: *SelectSL, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Netflix.png }
   - { name: Spotify,    <<: *SelectSL, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Spotify.png }
@@ -192,27 +192,27 @@ proxy-groups:
   - { name: Steam,      <<: *SelectSL, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Steam.png }
 
   # ===================== 地区分组 =====================
-  - { name: 香港,       <<: *SelectCS, filter: *FilterHK, proxies: [ 香港自动, 香港均衡-散列, 香港均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Hong_Kong.png }
-  - { name: 台湾,       <<: *SelectCS, filter: *FilterTW, proxies: [ 台湾自动, 台湾均衡-散列, 台湾均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Taiwan.png }
-  - { name: 澳门,       <<: *SelectCS, filter: *FilterMO, proxies: [ 澳门自动, 澳门均衡-散列, 澳门均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Macao.png }
-  - { name: 狮城,       <<: *SelectCS, filter: *FilterSG, proxies: [ 狮城自动, 狮城均衡-散列, 狮城均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Singapore.png }
-  - { name: 日本,       <<: *SelectCS, filter: *FilterJP, proxies: [ 日本自动, 日本均衡-散列, 日本均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Japan.png }
-  - { name: 韩国,       <<: *SelectCS, filter: *FilterKR, proxies: [ 韩国自动, 韩国均衡-散列, 韩国均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Korea.png }
-  - { name: 美国,       <<: *SelectCS, filter: *FilterUS, proxies: [ 美国自动, 美国均衡-散列, 美国均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/United_States.png }
-  - { name: 英国,       <<: *SelectCS, filter: *FilterUK, proxies: [ 英国自动, 英国均衡-散列, 英国均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/United_Kingdom.png }
-  - { name: 德国,       <<: *SelectCS, filter: *FilterDE, proxies: [ 德国自动, 德国均衡-散列, 德国均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Germany.png }
-  - { name: 法国,       <<: *SelectCS, filter: *FilterFR, proxies: [ 法国自动, 法国均衡-散列, 法国均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/France.png }
-  - { name: 印度,       <<: *SelectCS, filter: *FilterIN, proxies: [ 印度自动, 印度均衡-散列, 印度均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/India.png }
-  - { name: 印尼,       <<: *SelectCS, filter: *FilterID, proxies: [ 印尼自动, 印尼均衡-散列, 印尼均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Indonesia.webp }
-  - { name: 越南,       <<: *SelectCS, filter: *FilterVN, proxies: [ 越南自动, 越南均衡-散列, 越南均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Vietnam.png }
-  - { name: 泰国,       <<: *SelectCS, filter: *FilterTH, proxies: [ 泰国自动, 泰国均衡-散列, 泰国均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Thailand.png }
-  - { name: 澳洲,       <<: *SelectCS, filter: *FilterAU, proxies: [ 澳洲自动, 澳洲均衡-散列, 澳洲均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Australia.png }
-  - { name: 巴西,       <<: *SelectCS, filter: *FilterBR, proxies: [ 巴西自动, 巴西均衡-散列, 巴西均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Brazil.png }
-  - { name: 荷兰,       <<: *SelectCS, filter: *FilterNL, proxies: [ 荷兰自动, 荷兰均衡-散列, 荷兰均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Netherlands.png }
-  - { name: 土耳其,     <<: *SelectCS, filter: *FilterTU, proxies: [ 土耳其自动, 土耳其均衡-散列, 土耳其均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Turkey.png }
-  - { name: 阿根廷,     <<: *SelectCS, filter: *FilterAR, proxies: [ 阿根廷自动, 阿根廷均衡-散列, 阿根廷均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Argentina.png }
+  - { name: 香港,       <<: *SelectCS, filter: *FilterHK, proxies: [ 香港自动, 香港-回退, 香港均衡-散列, 香港均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Hong_Kong.png }
+  - { name: 台湾,       <<: *SelectCS, filter: *FilterTW, proxies: [ 台湾自动, 台湾-回退, 台湾均衡-散列, 台湾均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Taiwan.png }
+  - { name: 澳门,       <<: *SelectCS, filter: *FilterMO, proxies: [ 澳门自动, 澳门-回退, 澳门均衡-散列, 澳门均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Macao.png }
+  - { name: 狮城,       <<: *SelectCS, filter: *FilterSG, proxies: [ 狮城自动, 狮城-回退, 狮城均衡-散列, 狮城均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Singapore.png }
+  - { name: 日本,       <<: *SelectCS, filter: *FilterJP, proxies: [ 日本自动, 日本-回退, 日本均衡-散列, 日本均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Japan.png }
+  - { name: 韩国,       <<: *SelectCS, filter: *FilterKR, proxies: [ 韩国自动, 韩国-回退, 韩国均衡-散列, 韩国均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Korea.png }
+  - { name: 美国,       <<: *SelectCS, filter: *FilterUS, proxies: [ 美国自动, 美国-回退, 美国均衡-散列, 美国均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/United_States.png }
+  - { name: 英国,       <<: *SelectCS, filter: *FilterUK, proxies: [ 英国自动, 英国-回退, 英国均衡-散列, 英国均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/United_Kingdom.png }
+  - { name: 德国,       <<: *SelectCS, filter: *FilterDE, proxies: [ 德国自动, 德国-回退, 德国均衡-散列, 德国均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Germany.png }
+  - { name: 法国,       <<: *SelectCS, filter: *FilterFR, proxies: [ 法国自动, 法国-回退, 法国均衡-散列, 法国均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/France.png }
+  - { name: 印度,       <<: *SelectCS, filter: *FilterIN, proxies: [ 印度自动, 印度-回退, 印度均衡-散列, 印度均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/India.png }
+  - { name: 印尼,       <<: *SelectCS, filter: *FilterID, proxies: [ 印尼自动, 印尼-回退, 印尼均衡-散列, 印尼均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Indonesia.webp }
+  - { name: 越南,       <<: *SelectCS, filter: *FilterVN, proxies: [ 越南自动, 越南-回退, 越南均衡-散列, 越南均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Vietnam.png }
+  - { name: 泰国,       <<: *SelectCS, filter: *FilterTH, proxies: [ 泰国自动, 泰国-回退, 泰国均衡-散列, 泰国均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Thailand.png }
+  - { name: 澳洲,       <<: *SelectCS, filter: *FilterAU, proxies: [ 澳洲自动, 澳洲-回退, 澳洲均衡-散列, 澳洲均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Australia.png }
+  - { name: 巴西,       <<: *SelectCS, filter: *FilterBR, proxies: [ 巴西自动, 巴西-回退, 巴西均衡-散列, 巴西均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Brazil.png }
+  - { name: 荷兰,       <<: *SelectCS, filter: *FilterNL, proxies: [ 荷兰自动, 荷兰-回退, 荷兰均衡-散列, 荷兰均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Netherlands.png }
+  - { name: 土耳其,     <<: *SelectCS, filter: *FilterTU, proxies: [ 土耳其自动, 土耳其-回退, 土耳其均衡-散列, 土耳其均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Turkey.png }
+  - { name: 阿根廷,     <<: *SelectCS, filter: *FilterAR, proxies: [ 阿根廷自动, 阿根廷-回退, 阿根廷均衡-散列, 阿根廷均衡-轮询 ], icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Argentina.png }
 # 除了常用的地区，其他地区都放这里
-  - { name: 冷门节点,       <<: *BaseUT, filter: '(?i)^(?!.*(香港|台湾|日本|韩国|新加坡|美国|英国|德国|法国|印度|泰国|越南|印度|澳大利亚|巴西|港|台|日|韩|新|美|英|德|法|印|泰|越|尼|澳|巴|hk|tw|jp|kr|sg|us|uk|de|fr|in|th|vn|id|au|br)).*', icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Global.png }
+  - { name: 冷门节点,   <<: *BaseUT, filter: '(?i)^(?!.*(香港|台湾|日本|韩国|新加坡|美国|英国|德国|法国|印度|泰国|越南|印度|澳大利亚|巴西|港|台|日|韩|新|美|英|德|法|印|泰|越|尼|澳|巴|hk|tw|jp|kr|sg|us|uk|de|fr|in|th|vn|id|au|br)).*', icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Global.png }
 
   # ===================== 地区分组(自动测速+隐藏) =====================
   - { name: 香港自动,       <<: *BaseUT, filter: *FilterHK, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Hong_Kong.png }
@@ -234,6 +234,27 @@ proxy-groups:
   - { name: 荷兰自动,       <<: *BaseUT, filter: *FilterNL, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Netherlands.png }
   - { name: 土耳其自动,     <<: *BaseUT, filter: *FilterTU, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Turkey.png }
   - { name: 阿根廷自动,     <<: *BaseUT, filter: *FilterAR, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Argentina.png }
+
+  # ===================== 地区分组 (回退) =====================
+  - { name: 香港-回退,       <<: *BaseFB, filter: *FilterHK, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Hong_Kong.png }
+  - { name: 台湾-回退,       <<: *BaseFB, filter: *FilterTW, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Taiwan.png }
+  - { name: 澳门-回退,       <<: *BaseFB, filter: *FilterMO, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Macao.png }
+  - { name: 狮城-回退,       <<: *BaseFB, filter: *FilterSG, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Singapore.png }
+  - { name: 日本-回退,       <<: *BaseFB, filter: *FilterJP, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Japan.png }
+  - { name: 韩国-回退,       <<: *BaseFB, filter: *FilterKR, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Korea.png }
+  - { name: 美国-回退,       <<: *BaseFB, filter: *FilterUS, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/United_States.png }
+  - { name: 英国-回退,       <<: *BaseFB, filter: *FilterUK, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/United_Kingdom.png }
+  - { name: 德国-回退,       <<: *BaseFB, filter: *FilterDE, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Germany.png }
+  - { name: 法国-回退,       <<: *BaseFB, filter: *FilterFR, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/France.png }
+  - { name: 印度-回退,       <<: *BaseFB, filter: *FilterIN, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/India.png }
+  - { name: 印尼-回退,       <<: *BaseFB, filter: *FilterID, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Indonesia.png }
+  - { name: 越南-回退,       <<: *BaseFB, filter: *FilterVN, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Vietnam.png }
+  - { name: 泰国-回退,       <<: *BaseFB, filter: *FilterTH, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Thailand.png }
+  - { name: 澳洲-回退,       <<: *BaseFB, filter: *FilterAU, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Australia.png }
+  - { name: 巴西-回退,       <<: *BaseFB, filter: *FilterBR, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Brazil.png }
+  - { name: 荷兰-回退,       <<: *BaseFB, filter: *FilterNL, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Netherlands.png }
+  - { name: 土耳其-回退,     <<: *BaseFB, filter: *FilterTU, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Turkey.png }
+  - { name: 阿根廷-回退,     <<: *BaseFB, filter: *FilterAR, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Argentina.png }
 
   # =====================地区分组(负载均衡-散列) =====================
   - { name: 香港均衡-散列,       <<: *BaseCH, filter: *FilterHK, icon: https://fastly.jsdelivr.net/gh/wanswu/Qure@master/IconSet/Color/Hong_Kong.png }
@@ -289,6 +310,7 @@ rule-providers:
   Advertising:    { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/217heidai/adblockfilters@main/rules/adblockmihomolite.mrs }
   spotify-ads:    { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/spotify-ads.mrs }
   google-ads:     { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google-ads.mrs }
+  Apple:          { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple@cn.mrs }
   China:          { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/cn.mrs }
   Claude:         { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/anthropic.mrs }
   Disney:         { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/disney.mrs }
@@ -308,7 +330,7 @@ rule-providers:
   Twitter:        { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/x.mrs }
   Telegram:       { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/telegram.mrs }
   YouTube:        { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.mrs }
-  
+
   # IP规则集
   ChinaIP:        { <<: *BehaviorIP, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cn.mrs }
   GoogleIP:       { <<: *BehaviorIP, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/google.mrs }
@@ -331,6 +353,7 @@ rules:
   - RULE-SET,OpenAI,OpenAI
   - RULE-SET,Gemini,Gemini
   - RULE-SET,Google,Google
+  - RULE-SET,Apple,Apple
   - RULE-SET,Claude,Claude
   - RULE-SET,Twitter,Twitter(X)
   - RULE-SET,Telegram,Telegram
@@ -344,12 +367,12 @@ rules:
   - RULE-SET,Disney,Disney
   - RULE-SET,Steam,Steam
   - RULE-SET,Emby,Emby
-  - RULE-SET,Lan,直接连接
-  - RULE-SET,China,直接连接
+  - RULE-SET,Lan,DIRECT
+  - RULE-SET,China,DIRECT
 
   # IP规则集-按照优先级顺序排列
-  - RULE-SET,LanIP,直接连接
-  - RULE-SET,ChinaIP,直接连接
+  - RULE-SET,LanIP,DIRECT
+  - RULE-SET,ChinaIP,DIRECT
   - RULE-SET,GoogleIP,Google,no-resolve
   - RULE-SET,TelegramIP,Telegram,no-resolve
   - RULE-SET,TwitterIP,Twitter(X),no-resolve
