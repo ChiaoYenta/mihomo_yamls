@@ -79,7 +79,7 @@ geox-url:
 
 # 入站
 tun:
-  enable: false
+  enable: true
   stack: mixed
   auto-route: true
   auto-redirect: true
@@ -343,7 +343,7 @@ rule-providers:
 rules:
   # 自定义规则
   - DOMAIN-SUFFIX,browserleaks.com,手动选择
-  - AND,((DST-PORT,443),(NETWORK,UDP),(NOT,((RULE-SET,ChinaIP)))),REJECT  # 阻止海外 QUIC 流量泄漏
+  - AND,((DST-PORT,443),(NETWORK,UDP),(NOT,((RULE-SET,ChinaIP))),(NOT,((RULE-SET,China)))),REJECT  # 阻止海外 QUIC 流量泄漏
 
   # 域名规则集-按照优先级顺序排列
   - RULE-SET,Advertising,REJECT
