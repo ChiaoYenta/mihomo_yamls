@@ -1,27 +1,41 @@
-# 地址: https://github.com/Wans-OS/my-backup
-# 作者: Wans
-# 更新: 2026-03-01 16:18:25
+# 地址: https://github.com/0xWans/my-backup
+# 作者: 0xWans
+# 更新: 2026-04-01 16:27:07
 # 描述: 在proxy-providers加入您的机场订阅链接 (代理提供者)
 
 # 订阅锚点，排除了一些节点，例如 包含剩余, 官网, 到期, 也可以在exclude-filter添加你需要排除的节点
-Providers: &Providers { exclude-filter: "Expire|到期|剩余|Traffic|网址|官网|过期", type: http, interval: 86400, health-check: { enable: true, url: https://www.google.com/generate_204, interval: 300 } }
+FilterPP: &FilterPP "Expire|到期|剩余|Traffic|网址|官网|过期|会员ID"
+
+# 测速地址
+# YouTube
+# https://www.youtube.com/generate_204
+# Google
+# https://www.gstatic.com/generate_204
+# https://www.google.com/generate_204
+# https://www.google.cn/generate_204
+# Cloudflare
+# https://cp.cloudflare.com/generate_204
+# https://www.qualcomm.cn/generate_204
+UrlTest:  &UrlTest 'https://www.gstatic.com/generate_204'
+
+ProvidersURL: &ProvidersURL { exclude-filter: *FilterPP, type: http, interval: 86400, health-check: { enable: true, url: *UrlTest, interval: 300 } }
+ProvidersFILE: &ProvidersFILE { exclude-filter: *FilterPP, type: file, interval: 86400, health-check: { enable: true, url: *UrlTest, interval: 300 } }
 # 官方配置文档: https://wiki.metacubex.one/config/proxy-providers/
 proxy-providers:
   main:
-    <<: *Providers
+    <<: *ProvidersURL
     url: https://al121.cc/#/register?code=R7vdKxbE
-    path: ./proxy_provider/p1.yaml
+    path: ./proxy_provider/main.yaml
     override:
       udp: true
       additional-prefix: '主-'  # 订阅节点前缀，方便区分该节点属于哪个订阅链接 例如`主-香港🇭🇰
 
-  prepare:
-    <<: *Providers
-    url: https://al121.cc/#/register?code=R7vdKxbE
-    path: ./proxy_provider/p2.yaml
+  back:
+    <<: *ProvidersFILE
+    path: proxy_provider/back.yaml   # 本地文件，内容格式同订阅链接，方便测试和备用
     override:
       udp: true
-      additional-prefix: '备-'
+      additional-prefix: "备-6-"
 
 # 通用配置
 mode: rule
@@ -114,11 +128,12 @@ external-ui-url: https://github.com/Zephyruso/zashboard/releases/latest/download
 # secret: "Wans"
 external-controller: '127.0.0.1:9090'
 
+
 # 代理组锚点 hidden: true 是为了隐藏地区分组，有需要显示出来的佬友可以删除
-BaseUT: &BaseUT { type: url-test, interval: 300, lazy: true, url: 'https://www.gstatic.com/generate_204', hidden: true, include-all: true }
-BaseFB: &BaseFB { type: fallback, interval: 300, lazy: true, url: 'https://www.gstatic.com/generate_204', hidden: true, include-all: true }
-BaseCR: &BaseCR { type: load-balance, interval: 300, lazy: true, url: 'https://www.gstatic.com/generate_204', hidden: true, strategy: round-robin, include-all: true }
-BaseCH: &BaseCH { type: load-balance, interval: 300, lazy: true, url: 'http://www.gstatic.com/generate_204', hidden: true, strategy: consistent-hashing, include-all: true }
+BaseUT: &BaseUT { type: url-test, interval: 300, lazy: true, url: *UrlTest, hidden: true, include-all: true }
+BaseFB: &BaseFB { type: fallback, interval: 300, lazy: true, url: *UrlTest, hidden: true, include-all: true }
+BaseCR: &BaseCR { type: load-balance, interval: 300, lazy: true, url: *UrlTest, hidden: true, strategy: round-robin, include-all: true }
+BaseCH: &BaseCH { type: load-balance, interval: 300, lazy: true, url: *UrlTest, hidden: true, strategy: consistent-hashing, include-all: true }
 
 # 代理组锚点
 SelectUL: &SelectUL { type: select, proxies: [ 香港, 台湾, 澳门, 狮城, 日本, 韩国, 美国, 英国, 德国, 法国, 印度, 越南, 印尼, 泰国, 澳洲, 巴西, 荷兰, 土耳其, 阿根廷, 冷门节点, DIRECT, REJECT ], include-all: true }
@@ -309,8 +324,8 @@ rule-anchor:
 rule-providers:
   # 域名规则集
   Advertising:    { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/217heidai/adblockfilters@main/rules/adblockmihomolite.mrs }
-  spotify-ads:    { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/spotify-ads.mrs }
-  google-ads:     { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google-ads.mrs }
+  spotify-ads:    { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/spotify@ads.mrs }
+  google-ads:     { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google@ads.mrs }
   Apple:          { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple@cn.mrs }
   China:          { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/cn.mrs }
   Claude:         { <<: *BehaviorDN, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/anthropic.mrs }
