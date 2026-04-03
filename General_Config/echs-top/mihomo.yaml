@@ -186,24 +186,24 @@ zl: &zl { type: select, proxies: [直接连接,代理连接,最低延迟,香港|
 dl: &dl { type: select, proxies: [代理连接,直接连接,最低延迟,香港|故障转移,台湾|故障转移,新加坡|故障转移,日本|故障转移,韩国|故障转移,美国|故障转移,加拿大|故障转移,德国|故障转移,英国|故障转移,法国|故障转移,荷兰|故障转移], include-all-providers: true }
 fall: &fall { type: fallback, <<: *use, hidden: true }
 proxy-groups:
-  - { name: 代理连接, type: select, proxies: [最低延迟,香港|故障转移,台湾|故障转移,新加坡|故障转移,日本|故障转移,韩国|故障转移,美国|故障转移,加拿大|故障转移,德国|故障转移,英国|故障转移,法国|故障转移,荷兰|故障转移], include-all-providers: true, icon: 'https://mihomo.echs.top/icon/Global.webp' }
-  - { name: 直接连接, type: select, proxies: [DIRECT,IPV4优先,IPV6优先,仅IPV4,仅IPV6], icon: 'https://mihomo.echs.top/icon/DIRECT.webp' }
-  - { name: 代理DNS, <<: *dl, icon: 'https://mihomo.echs.top/icon/Server.webp' }
-  - { name: 国外AI, <<: *dl, icon: 'https://mihomo.echs.top/icon/AI.webp' }
-  - { name: TELEGRAM, <<: *dl, icon: 'https://mihomo.echs.top/icon/Telegram.webp' }
-  - { name: GITHUB, <<: *dl, icon: 'https://mihomo.echs.top/icon/GitHub.webp' }
-  - { name: 国外媒体, <<: *dl, icon: 'https://mihomo.echs.top/icon/Emby.webp' }
-  - { name: GOOGLE, <<: *dl, icon: 'https://cdn.gh-proxy.com/https://raw.githubusercontent.com/echs-top/proxy/main/icon/Google.webp' }
-  - { name: 最低延迟, type: url-test, tolerance: 30, <<: *use, hidden: true, icon: 'https://cdn.gh-proxy.com/https://raw.githubusercontent.com/echs-top/proxy/main/icon/Fast.webp' }
-  - { name: 香港|故障转移, <<: *fall, filter: '(?i)🇭🇰|香港|\bHK\b|\bhongkong\b|\bhong\s?kong\b', icon: 'https://mihomo.echs.top/flags/hk.svg' }
-  - { name: 台湾|故障转移, <<: *fall, filter: '(?i)🇹🇼|台湾|\bTW\b|\btaiwan\b', icon: 'https://mihomo.echs.top/flags/tw.svg' }
-  - { name: 新加坡|故障转移, <<: *fall, filter: '(?i)🇸🇬|新加坡|狮城|\bSG\b|\bsingapore\b', icon: 'https://mihomo.echs.top/flags/sg.svg' }
-  - { name: 日本|故障转移, <<: *fall, filter: '(?i)🇯🇵|日本|\bJP\b|\bjapan\b', icon: 'https://mihomo.echs.top/flags/jp.svg' }
-  - { name: 韩国|故障转移, <<: *fall, filter: '(?i)🇰🇷|韩国|\bKR\b', icon: 'https://mihomo.echs.top/flags/kr.svg' }
-  - { name: 美国|故障转移, <<: *fall, filter: '(?i)🇺🇸|美国|\bUS\b|\bunitedstates\b|\bunited\s?states\b', icon: 'https://mihomo.echs.top/flags/us.svg' }
-  - { name: 加拿大|故障转移, <<: *fall, filter: '(?i)🇨🇦|加拿大|\bCA\b|\bcanada\b', icon: 'https://mihomo.echs.top/flags/ca.svg' }
-  - { name: 德国|故障转移, <<: *fall, filter: '(?i)🇩🇪|德国|\bDE\b|\bgermany\b', icon: 'https://mihomo.echs.top/flags/de.svg' }
-  - { name: 英国|故障转移, <<: *fall, filter: '(?i)🇬🇧|英国|\bUK\b|\bGB\b|\bunitedkingdom\b|\bunited\s?kingdom\b', icon: 'https://mihomo.echs.top/flags/gb.svg' }
-  - { name: 法国|故障转移, <<: *fall, filter: '(?i)🇫🇷|法国|\bFR\b', icon: 'https://mihomo.echs.top/flags/fr.svg' }
-  - { name: 荷兰|故障转移, <<: *fall, filter: '(?i)🇳🇱|荷兰|\bNL\b|\bnetherlands?\b', icon: 'https://mihomo.echs.top/flags/nl.svg' }
-  - { name: GLOBAL, type: select, proxies: [最低延迟,香港|故障转移,台湾|故障转移,新加坡|故障转移,日本|故障转移,韩国|故障转移,美国|故障转移,加拿大|故障转移,德国|故障转移,英国|故障转移,法国|故障转移,荷兰|故障转移,代理连接,直接连接,代理DNS,国外AI,TELEGRAM,GITHUB,国外媒体,GOOGLE], include-all-providers: true, hidden: true, icon: 'https://mihomo.echs.top/icon/Globefish.webp' }
+  - { name: 代理连接, type: select, proxies: [最低延迟,香港|故障转移,台湾|故障转移,新加坡|故障转移,日本|故障转移,韩国|故障转移,美国|故障转移,加拿大|故障转移,德国|故障转移,英国|故障转移,法国|故障转移,荷兰|故障转移], include-all-providers: true, icon: 'https://mihomo.echs.top/img/icon/Global.webp' }
+  - { name: 直接连接, type: select, proxies: [DIRECT,IPV4优先,IPV6优先,仅IPV4,仅IPV6], icon: 'https://mihomo.echs.top/img/icon/DIRECT.webp' }
+  - { name: 代理DNS, <<: *dl, icon: 'https://mihomo.echs.top/img/icon/Server.webp' }
+  - { name: 国外AI, <<: *dl, icon: 'https://mihomo.echs.top/img/icon/AI.webp' }
+  - { name: TELEGRAM, <<: *dl, icon: 'https://mihomo.echs.top/img/icon/Telegram.webp' }
+  - { name: GITHUB, <<: *dl, icon: 'https://mihomo.echs.top/img/icon/GitHub.webp' }
+  - { name: 国外媒体, <<: *dl, icon: 'https://mihomo.echs.top/img/icon/Emby.webp' }
+  - { name: GOOGLE, <<: *dl, icon: 'https://mihomo.echs.top/img/icon/Google.webp' }
+  - { name: 最低延迟, type: url-test, tolerance: 30, <<: *use, hidden: true, icon: 'https://mihomo.echs.top/img/icon/Fast.webp' }
+  - { name: 香港|故障转移, <<: *fall, filter: '(?i)🇭🇰|香港|\bHK\b|\bhongkong\b|\bhong\s?kong\b', icon: 'https://mihomo.echs.top/img/flags/hk.svg' }
+  - { name: 台湾|故障转移, <<: *fall, filter: '(?i)🇹🇼|台湾|\bTW\b|\btaiwan\b', icon: 'https://mihomo.echs.top/img/flags/tw.svg' }
+  - { name: 新加坡|故障转移, <<: *fall, filter: '(?i)🇸🇬|新加坡|狮城|\bSG\b|\bsingapore\b', icon: 'https://mihomo.echs.top/img/flags/sg.svg' }
+  - { name: 日本|故障转移, <<: *fall, filter: '(?i)🇯🇵|日本|\bJP\b|\bjapan\b', icon: 'https://mihomo.echs.top/img/flags/jp.svg' }
+  - { name: 韩国|故障转移, <<: *fall, filter: '(?i)🇰🇷|韩国|\bKR\b', icon: 'https://mihomo.echs.top/img/flags/kr.svg' }
+  - { name: 美国|故障转移, <<: *fall, filter: '(?i)🇺🇸|美国|\bUS\b|\bunitedstates\b|\bunited\s?states\b', icon: 'https://mihomo.echs.top/img/flags/us.svg' }
+  - { name: 加拿大|故障转移, <<: *fall, filter: '(?i)🇨🇦|加拿大|\bCA\b|\bcanada\b', icon: 'https://mihomo.echs.top/img/flags/ca.svg' }
+  - { name: 德国|故障转移, <<: *fall, filter: '(?i)🇩🇪|德国|\bDE\b|\bgermany\b', icon: 'https://mihomo.echs.top/img/flags/de.svg' }
+  - { name: 英国|故障转移, <<: *fall, filter: '(?i)🇬🇧|英国|\bUK\b|\bGB\b|\bunitedkingdom\b|\bunited\s?kingdom\b', icon: 'https://mihomo.echs.top/img/flags/gb.svg' }
+  - { name: 法国|故障转移, <<: *fall, filter: '(?i)🇫🇷|法国|\bFR\b', icon: 'https://mihomo.echs.top/img/flags/fr.svg' }
+  - { name: 荷兰|故障转移, <<: *fall, filter: '(?i)🇳🇱|荷兰|\bNL\b|\bnetherlands?\b', icon: 'https://mihomo.echs.top/img/flags/nl.svg' }
+  - { name: GLOBAL, type: select, proxies: [最低延迟,香港|故障转移,台湾|故障转移,新加坡|故障转移,日本|故障转移,韩国|故障转移,美国|故障转移,加拿大|故障转移,德国|故障转移,英国|故障转移,法国|故障转移,荷兰|故障转移,代理连接,直接连接,代理DNS,国外AI,TELEGRAM,GITHUB,国外媒体,GOOGLE], include-all-providers: true, hidden: true, icon: 'https://mihomo.echs.top/img/icon/Globefish.webp' }
