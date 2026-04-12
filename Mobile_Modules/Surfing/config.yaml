@@ -367,7 +367,7 @@ rule-providers:
   No-ads-all_域:
     <<: *Domain
     path: ./rules/No-ads-all.mrs
-    url: "https://anti-ad.net/mihomo.mrs"
+    url: "https://cdn.jsdelivr.net/gh/TG-Twilight/AWAvenue-Ads-Rule@main/Filters/AWAvenue-Ads-Rule-Clash.mrs"
   XiaoHongShu_域:
     <<: *Domain
     path: ./rules/XiaoHongShu.mrs
