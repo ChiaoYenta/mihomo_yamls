@@ -45,6 +45,7 @@ redir-port: 0
 tun:
   enable: true
   # device: meta
+  # Windows mixed, Android15+ gvisor(抗休眠)
   stack: mixed
   auto-route: true
   auto-redirect: true
@@ -54,13 +55,14 @@ tun:
   dns-hijack: [any:53,tcp://any:53]
   # mtu: 9000
   # udp-timeout: 300
+  # endpoint-independent-nat: true
 ip: &ip { type: http, interval: 86400, proxy: 代理连接, behavior: ipcidr, format: mrs }
 domain: &domain { type: http, interval: 86400, proxy: 代理连接, behavior: domain, format: mrs }
 rule-providers:
   private_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/private_ip.mrs',  path: ./rules/private_ip.mrs }
   private: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/private.mrs', path: ./rules/private.mrs }
   AWAvenue-Ads: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/AWAvenue-Ads_domain.mrs', path: ./rules/AWAvenue-Ads.mrs }
-  fcm: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/fcm_domain.mrs', path: ./rules/fcm.mrs }
+  fcm: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/googlefcm.mrs', path: ./rules/fcm.mrs }
   captcha: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/captcha_domain.mrs', path: ./rules/captcha.mrs }
   ai: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/ai.mrs', path: ./rules/ai.mrs }
   telegram: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/telegram.mrs', path: ./rules/telegram.mrs }
@@ -85,52 +87,63 @@ rule-providers:
   direct_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/direct_ip.mrs', path: ./rules/direct_ip.mrs }
   cn_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/cn_ip.mrs', path: ./rules/cn_ip.mrs }
 rules:
-  - DST-PORT,5228-5230,直接连接
-  - AND,((NETWORK,UDP),(DST-PORT,1337/2710/6881-6999/7777)),代理UDP
+  - SUB-RULE,(DST-PORT,5228-5230),fcm_rules
   - DST-PORT,1337/2710/6881-6999/7777,TRACKER
   - RULE-SET,private_ip,直接连接,no-resolve
   - RULE-SET,private,直接连接
   - RULE-SET,AWAvenue-Ads,REJECT
-  - RULE-SET,fcm,直接连接
-  - AND,((NETWORK,UDP),(RULE-SET,captcha)),代理UDP
-  - RULE-SET,captcha,人机验证
-  - AND,((NETWORK,UDP),(RULE-SET,ai)),代理UDP
-  - RULE-SET,ai,国外AI
-  - AND,((NETWORK,UDP),(RULE-SET,telegram)),代理UDP
-  - RULE-SET,telegram,TELEGRAM
-  - AND,((NETWORK,UDP),(RULE-SET,media)),代理UDP
-  - RULE-SET,media,国外媒体
+  - SUB-RULE,(RULE-SET,fcm),fcm_rules
+  - SUB-RULE,(RULE-SET,captcha),captcha_rules
+  - SUB-RULE,(RULE-SET,ai),ai_rules
+  - SUB-RULE,(RULE-SET,telegram),telegram_rules
+  - SUB-RULE,(RULE-SET,media),media_rules
   - RULE-SET,google-cn,直接连接
-  - AND,((NETWORK,UDP),(RULE-SET,google)),代理UDP
-  - RULE-SET,google,GOOGLE
-  - AND,((NETWORK,UDP),(RULE-SET,trackerslist)),代理UDP
-  - RULE-SET,trackerslist,TRACKER
+  - SUB-RULE,(RULE-SET,google),google_rules
+  - SUB-RULE,(RULE-SET,trackerslist),trackerslist_rules
   - RULE-SET,apple-cn,直接连接
   - RULE-SET,microsoft-cn,直接连接
   - RULE-SET,games-cn,直接连接
-  - AND,((NETWORK,UDP),(RULE-SET,proxy_domain)),代理UDP
-  - RULE-SET,proxy_domain,代理连接
+  - SUB-RULE,(RULE-SET,proxy_domain),proxy_rules
   - RULE-SET,direct_domain,直接连接
-  - AND,((NETWORK,UDP),(RULE-SET,github)),代理UDP
-  - RULE-SET,github,代理连接
-  - AND,((NETWORK,UDP),(RULE-SET,proxy)),代理UDP
-  - RULE-SET,proxy,代理连接
+  - SUB-RULE,(RULE-SET,github),proxy_rules
+  - SUB-RULE,(RULE-SET,proxy),proxy_rules
   - RULE-SET,cn,直接连接
-  - AND,((NETWORK,UDP),(RULE-SET,telegram_ip)),代理UDP
-  - RULE-SET,telegram_ip,TELEGRAM
-  - AND,((NETWORK,UDP),(RULE-SET,media_ip)),代理UDP
-  - RULE-SET,media_ip,国外媒体
-  - AND,((NETWORK,UDP),(RULE-SET,google_ip)),代理UDP
-  - RULE-SET,google_ip,GOOGLE
-  - AND,((NETWORK,UDP),(RULE-SET,proxy_ip)),代理UDP
-  - RULE-SET,proxy_ip,代理连接
+  - SUB-RULE,(RULE-SET,telegram_ip),telegram_rules
+  - SUB-RULE,(RULE-SET,media_ip),media_rules
+  - SUB-RULE,(RULE-SET,google_ip),google_rules
+  - SUB-RULE,(RULE-SET,proxy_ip),proxy_rules
   - RULE-SET,enhanced-FaaS-in-China_ip,直接连接
   - RULE-SET,direct_ip,直接连接
   - RULE-SET,cn_ip,直接连接
-  - NETWORK,UDP,代理UDP
-  # 激进的bt/tracker兜底
+  - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+  # 极其激进的bt/tracker兜底
   - DST-PORT,10000-65535,TRACKER
   - MATCH,代理连接
+sub-rules:
+  fcm_rules:
+    - NETWORK,UDP,REJECT
+    - MATCH,直接连接
+  captcha_rules:
+    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+    - MATCH,人机验证
+  ai_rules:
+    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+    - MATCH,国外AI
+  telegram_rules:
+    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+    - MATCH,TELEGRAM
+  media_rules:
+    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+    - MATCH,国外媒体
+  google_rules:
+    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+    - MATCH,GOOGLE
+  trackerslist_rules:
+    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+    - MATCH,TRACKER
+  proxy_rules:
+    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+    - MATCH,代理连接
 hosts:
   dns.alidns.com: [223.5.5.5,223.6.6.6,'2400:3200::1','2400:3200:baba::1']
   doh.pub: [120.53.53.53,1.12.12.21]
@@ -179,7 +192,7 @@ dns:
   nameserver-policy:
     'rule-set:private': *direct-dns
     'rule-set:AWAvenue-Ads': [rcode://name_error]
-    'rule-set:fcm': ['https://dns.echs.top/dns-query#直接连接']
+    'rule-set:fcm': *direct-dns
     'rule-set:captcha': *proxy-dns
     'rule-set:ai': *proxy-dns
     'rule-set:telegram': *proxy-dns
@@ -214,7 +227,7 @@ dl: &dl { type: select, proxies: [代理连接,直接连接,最低延迟,香港|
 proxy-groups:
   - { name: 代理连接, type: select, proxies: [最低延迟,香港|故障转移,台湾|故障转移,新加坡|故障转移,日本|故障转移,韩国|故障转移,美国|故障转移,加拿大|故障转移,德国|故障转移,英国|故障转移,法国|故障转移,荷兰|故障转移], include-all-providers: true, icon: 'https://mihomo.echs.top/img/icon/Global.webp' }
   - { name: 直接连接, type: select, proxies: [DIRECT,IPV4优先,IPV6优先,仅IPV4,仅IPV6], icon: 'https://mihomo.echs.top/img/icon/DIRECT.webp' }
-  - { name: 代理UDP, type: select, proxies: [PASS,REJECT], icon: 'https://mihomo.echs.top/img/icon/Forbidden.webp' }
+  - { name: 代理QUIC, type: select, proxies: [PASS,REJECT], icon: 'https://mihomo.echs.top/img/icon/Forbidden.webp' }
   - { name: 代理DNS, <<: *dl, icon: 'https://mihomo.echs.top/img/icon/Server.webp' }
   - { name: 人机验证, <<: *dl, icon: 'https://mihomo.echs.top/img/icon/CloudFlare.webp' }
   - { name: 国外AI, <<: *dl, icon: 'https://mihomo.echs.top/img/icon/AI.webp' }
@@ -234,4 +247,4 @@ proxy-groups:
   - { name: 英国|故障转移, <<: *fall, filter: '(?i)🇬🇧|英国|\bUK\b|\bGB\b|\bunitedkingdom\b|\bunited\s?kingdom\b', icon: 'https://mihomo.echs.top/img/flags/gb.svg' }
   - { name: 法国|故障转移, <<: *fall, filter: '(?i)🇫🇷|法国|\bFR\b', icon: 'https://mihomo.echs.top/img/flags/fr.svg' }
   - { name: 荷兰|故障转移, <<: *fall, filter: '(?i)🇳🇱|荷兰|\bNL\b|\bnetherlands?\b', icon: 'https://mihomo.echs.top/img/flags/nl.svg' }
-  - { name: GLOBAL, type: select, proxies: [最低延迟,香港|故障转移,台湾|故障转移,新加坡|故障转移,日本|故障转移,韩国|故障转移,美国|故障转移,加拿大|故障转移,德国|故障转移,英国|故障转移,法国|故障转移,荷兰|故障转移,代理连接,直接连接,代理UDP,代理DNS,人机验证,国外AI,TELEGRAM,国外媒体,GOOGLE,TRACKER], include-all-providers: true, hidden: true, icon: 'https://mihomo.echs.top/img/icon/Globefish.webp' }
+  - { name: GLOBAL, type: select, proxies: [最低延迟,香港|故障转移,台湾|故障转移,新加坡|故障转移,日本|故障转移,韩国|故障转移,美国|故障转移,加拿大|故障转移,德国|故障转移,英国|故障转移,法国|故障转移,荷兰|故障转移,代理连接,直接连接,代理QUIC,代理DNS,人机验证,国外AI,TELEGRAM,国外媒体,GOOGLE,TRACKER], include-all-providers: true, hidden: true, icon: 'https://mihomo.echs.top/img/icon/Globefish.webp' }
