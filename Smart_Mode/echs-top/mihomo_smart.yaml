@@ -1,4 +1,4 @@
-# update: 2026-04-26
+# update: 2026-04-29
 # 简介: https://github.com/echs-top/proxy
 
 
@@ -158,8 +158,9 @@ hosts:
   dns.quad9.net: [9.9.9.9,149.112.112.112,'2620:fe::fe','2620:fe::9']
   services.googleapis.cn: services.googleapis.com
   google.cn: google.com
-direct-dns: &direct-dns ['https://dns.alidns.com/dns-query#直接连接','https://doh.pub/dns-query#直接连接&h3=false']
-proxy-dns: &proxy-dns ['https://dns.google/dns-query#代理DNS','https://dns.quad9.net/dns-query#代理DNS']
+direct-dns: &direct-dns [119.29.29.29,223.5.5.5,'2402:4e00::','2400:3200::1']
+direct-doh: &direct-doh ['https://dns.alidns.com/dns-query#直接连接','https://doh.pub/dns-query#直接连接&h3=false']
+proxy-doh: &proxy-doh ['https://dns.google/dns-query#代理DNS','https://dns.quad9.net/dns-query#代理DNS']
 dns: 
   enable: true
   cache-algorithm: arc
@@ -195,29 +196,29 @@ dns:
     - RULE-SET,cn,real-ip
     - MATCH,fake-ip
   # default-nameserver: [223.5.5.5,119.29.29.29]
-  proxy-server-nameserver: *direct-dns
+  proxy-server-nameserver: *direct-doh
   nameserver-policy:
     'rule-set:private': *direct-dns
     'rule-set:AWAvenue-Ads': [rcode://name_error]
-    'rule-set:fcm': *direct-dns
-    'rule-set:captcha': *proxy-dns
-    'rule-set:ai': *proxy-dns
-    'rule-set:telegram': *proxy-dns
-    'rule-set:media': *proxy-dns
-    'rule-set:google-cn': *direct-dns
-    'rule-set:google': *proxy-dns
-    'rule-set:trackerslist': *proxy-dns
-    'rule-set:apple-cn': *direct-dns
-    'rule-set:microsoft-cn': *direct-dns
-    'rule-set:games-cn': *direct-dns
-    'rule-set:proxy_domain': *proxy-dns
-    'rule-set:direct_domain': *direct-dns
-    'rule-set:github': *proxy-dns
-    'rule-set:proxy': *proxy-dns
+    'rule-set:fcm': *direct-doh
+    'rule-set:captcha': *direct-doh
+    'rule-set:ai': *proxy-doh
+    'rule-set:telegram': *proxy-doh
+    'rule-set:media': *proxy-doh
+    'rule-set:google-cn': *direct-doh
+    'rule-set:google': *proxy-doh
+    'rule-set:trackerslist': *proxy-doh
+    'rule-set:apple-cn': *direct-doh
+    'rule-set:microsoft-cn': *direct-doh
+    'rule-set:games-cn': *direct-doh
+    'rule-set:proxy_domain': *proxy-doh
+    'rule-set:direct_domain': *direct-doh
+    'rule-set:github': *proxy-doh
+    'rule-set:proxy': *proxy-doh
     'rule-set:cn': *direct-dns
     'rule-set:dnsmasq-china-add': *direct-dns
-  nameserver: *proxy-dns
-  direct-nameserver: *direct-dns
+  nameserver: *proxy-doh
+  direct-nameserver: *direct-doh
   direct-nameserver-follow-policy: true
 sniffer: 
   enable: true
