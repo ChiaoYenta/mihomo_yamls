@@ -146,7 +146,7 @@ dns:
   ipv6: true
   listen: 0.0.0.0:1053
   fake-ip-range: 198.18.0.0/16
-  fake-ip-range6: fdfe:dcba:9876::1/64
+  fake-ip-range6: fdfe:dcba:9876::/64
   enhanced-mode: fake-ip # redir-host
   fake-ip-filter-mode: rule
   fake-ip-filter:
