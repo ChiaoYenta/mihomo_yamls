@@ -24,14 +24,13 @@ unified-delay: true
 tcp-concurrent: true
 log-level: silent # debug / silent
 find-process-mode: always
-#global-client-fingerprint: chrome 未来官方可能将移除，意义不大
 external-controller: 0.0.0.0:9090 #修改端口后，如使用磁贴请重新正确设置API端口
 external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
 external-ui: "./webroot/Zash/"
 secret: "" # 面板访问密码，如在公网访问建议设置
 # —————————
 # ==== Tips
-# 1. 修改配置文件保存时，建议重启服务/重载配置.
+# 1. 修改配置文件保存时，建议先通过App先发起重载，以定位语法错误.
 # 2. 如使用 SurfingTile 的配置覆写，当前配置文件的某些字段应保持原有的完整性结构
 # —————————
 # 健康检查
@@ -69,18 +68,21 @@ proxy-providers: # ← 此函数位置请勿变动！此为模块更新时备份
     <<: *p
     override:
       additional-prefix: "Main："
+      client-fingerprint: chrome
     path: ./proxies/1.主要地址.yaml
     url: "此处引入您的Clash订阅链接地址"
   2.备用地址:
     <<: *p
     override:
       additional-prefix: "Minor："
+      client-fingerprint: chrome
     path: ./proxies/2.备用地址.yaml
     url: "此处引入您的Clash订阅链接地址"
   3.额外地址:
     <<: *p
     override:
       additional-prefix: "Additi："
+      client-fingerprint: chrome
     path: ./proxies/3.额外地址.yaml
     url: "此处引入您的Clash订阅链接地址"
 # —————————
@@ -148,13 +150,11 @@ dns:
   fake-ip-range: 198.18.0.0/16
   fake-ip-range6: fdfe:dcba:9876::/64
   enhanced-mode: fake-ip # redir-host
-  fake-ip-filter-mode: rule
   fake-ip-filter:
-    - "RULE-SET,CN_域,real-ip"
-    - "RULE-SET,Private_域,real-ip"
-    - "RULE-SET,GoogleFCM_域,real-ip"
-    - "RULE-SET,自定义规则,real-ip"
-    - "MATCH,fake-ip"
+    - "RULE-SET,CN_域"
+    - "RULE-SET,Private_域"
+    - "RULE-SET,GoogleFCM_域"
+    - "RULE-SET,自定义规则"
   proxy-server-nameserver:
     - https://1.12.12.12:443/dns-query#🌐 本机·本地直连&h3=false
     - https://120.53.53.53:443/dns-query#🌐 本机·本地直连&h3=false
